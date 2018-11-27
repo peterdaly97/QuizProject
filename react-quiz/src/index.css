@@ -60,6 +60,36 @@ body {
 .question {
   margin: 0;
   padding: 0.5rem 2.5rem 1.5rem 2.5rem;
+  border: 50px solid #fff;
+}
+
+
+.option {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #574de3), color-stop(1, #eff5eb));
+	background:-moz-linear-gradient(top, #574de3 5%, #eff5eb 100%);
+	background:-webkit-linear-gradient(top, #574de3 5%, #eff5eb 100%);
+	background:-o-linear-gradient(top, #574de3 5%, #eff5eb 100%);
+	background:-ms-linear-gradient(top, #574de3 5%, #eff5eb 100%);
+	background:linear-gradient(to bottom, #574de3 5%, #eff5eb 100%);
+	border:4px solid #1978ab;
+	display:inline-block;
+	cursor:pointer;
+	width: 150px;
+  height: 150px;
+
+  font-size: 32px;
+  text-decoration: underline;
+  text-shadow: 2px 1px black;
+  position: absolute;
+  top: 30%;
+}
+
+.left {
+  left: 10%;
+}
+
+.right {
+  right: 10%;
 }
 
 /* AnswerOption Component */

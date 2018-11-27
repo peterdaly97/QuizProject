@@ -14,14 +14,14 @@ import { CSSTransitionGroup } from 'react-transition-group';
         transitionAppearTimeout={500}
       >
         <div>
-          You prefer <strong>{props.quizResult}</strong>!
+          You got <strong>{props.quizResult}</strong> correct!
         </div>
       </CSSTransitionGroup>
     );
   }
 
   Result.propTypes = {
-    quizResult: PropTypes.string.isRequired,
+    quizResult: PropTypes.number.isRequired
   };
 
   export default Result;

@@ -11,9 +11,9 @@ function Quiz(props) {
   function renderAnswerOptions(key) {
     return (
       <AnswerOption
-        key={key.content}
-        answerContent={key.content}
-        answerType={key.type}
+        key={key}
+        answerContent={key}
+        answerType={key}
         answer={props.answer}
         questionId={props.questionId}
         onAnswerSelected={props.onAnswerSelected}
@@ -33,7 +33,7 @@ function Quiz(props) {
   >
     <div key={props.questionId}>
       <QuestionCount counter={props.questionId} total={props.questionTotal} />
-      <Question content={props.question} />
+      <Question content={props.question}/>
       <ul className="answerOptions">
         {props.answerOptions.map(renderAnswerOptions)}
       </ul>
