@@ -24,6 +24,10 @@ body {
   font-family: sans-serif;
 }
 
+h3 {
+  text-align: left;
+}
+
 .container {
   position: relative;
   max-width: 800px;
@@ -54,6 +58,14 @@ body {
 .questionCount {
   padding: 1.5rem 2.5rem 0;
   font-size: 14px;
+}
+
+.infoBox {
+  width: 300px;
+  border: 2px solid #1c73ff;
+  padding-left: 25px;
+  margin-bottom: 25px;
+  background: #c0c7d1;
 }
 
 /* Question Component */

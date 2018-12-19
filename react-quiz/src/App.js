@@ -36,7 +36,7 @@ class App extends Component {
     const shuffledAnswerOptions = quizQuestions.map((question) => this.shuffleArray(question.answers));
 
     this.setState({
-      info: infoContent[0].content,
+      info: infoContent[0].info,
       question: quizQuestions[0].question,
       correct: quizQuestions[0].correct,
       answerOptions: shuffledAnswerOptions[0],
@@ -153,7 +153,7 @@ class App extends Component {
   renderInfoContent() {
     return (
       <Info
-        content={this.state.info}
+        info={this.state.info}
         button={this.changeToHome}
       />
     );

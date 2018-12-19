@@ -6,10 +6,12 @@ import Option from '../components/Option';
 function Info(props) {
 
   function renderInfoPoints(key) {
+    console.log(key);
     return (
       <InfoPoint
         key={key}
-        content={key}
+        title={key.title}
+        content={key.content}
       />
     );
   }
@@ -18,14 +20,14 @@ function Info(props) {
     <div>
       <Option name="Home" side="option top" change={props.button}/>
       <ul className="info">
-        {props.content.map(renderInfoPoints)}
+        {props.info.map(renderInfoPoints)}
       </ul>
     </div>
   );
 }
 
 Info.propTypes = {
-  content: PropTypes.array.isRequired,
+  info : PropTypes.array.isRequired,
   button : PropTypes.func.isRequired
 };
 
