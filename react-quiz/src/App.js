@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import quizQuestions from './api/quizQuestions';
+import infoContent from './api/infoContent';
 import Quiz from './components/Quiz';
+import Info from './components/Info';
 import Result from './components/Result';
 import Option from './components/Option';
-import logo from './svg/logo.svg';
+import logo from './svg/coeliacLogo.png';
 import './App.css';
 
 class App extends Component {
@@ -24,6 +26,8 @@ class App extends Component {
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
+    this.changeToHome = this.changeToHome.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this);
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
   }
@@ -32,10 +36,16 @@ class App extends Component {
     const shuffledAnswerOptions = quizQuestions.map((question) => this.shuffleArray(question.answers));
 
     this.setState({
+      info: infoContent[0].content,
       question: quizQuestions[0].question,
       correct: quizQuestions[0].correct,
       answerOptions: shuffledAnswerOptions[0],
-      page: "home"
+      counter: 0,
+      answer: '',
+      questionId: 1,
+      answersCount: 0,
+      result: 0,
+      page: "Home"
     });
   }
 
@@ -107,8 +117,13 @@ class App extends Component {
         question={this.state.question}
         questionTotal={quizQuestions.length}
         onAnswerSelected={this.handleAnswerSelected}
+        button={this.componentWillMount}
       />
     );
+  }
+
+  changeToHome(event) {
+    this.setState({ page: "Home" });
   }
 
   changeToQuiz(event) {
@@ -121,7 +136,7 @@ class App extends Component {
 
   renderResult() {
     return (
-      <Result quizResult={this.state.result} />
+      <Result quizResult={this.state.result} button={this.componentWillMount}/>
     );
   }
 
@@ -135,6 +150,15 @@ class App extends Component {
     }
   }
 
+  renderInfoContent() {
+    return (
+      <Info
+        content={this.state.info}
+        button={this.changeToHome}
+      />
+    );
+  }
+
   renderHome() {
     return (
       <div>
@@ -145,11 +169,14 @@ class App extends Component {
   }
 
   renderPage() {
-    if(this.state.page === "home") {
+    if(this.state.page === "Home") {
       return this.renderHome();
     }
     else if(this.state.page === "Quiz") {
       return this.renderQuizContent();
+    }
+    else if(this.state.page === "Info") {
+      return this.renderInfoContent();
     }
   }
 
@@ -159,7 +186,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>React Quiz</h2>
+          <h2>Info/Quiz</h2>
         </div>
         {this.renderPage()}
       </div>
