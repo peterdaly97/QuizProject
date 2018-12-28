@@ -88,6 +88,14 @@ h3 {
 
 }
 
+.timer {
+  position: absolute;
+  top: -30%;
+  right: 5%;
+  font-size: 32px;
+  color: white;
+}
+
 .bottom {
   border-radius: 10px;
   font-size: 32px;

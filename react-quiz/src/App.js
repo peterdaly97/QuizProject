@@ -21,8 +21,9 @@ class App extends Component {
      answerOptions: [],
      answer: '',
      answersCount: 0,
-     result: 0,
-     page: ''
+     result: -1,
+     page: '',
+     timer: 10
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
@@ -30,9 +31,11 @@ class App extends Component {
     this.componentWillMount = this.componentWillMount.bind(this);
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
+    this.tick = this.tick.bind(this);
   }
 
   componentWillMount() {
+    clearInterval(this.intervalHandle);
     const shuffledAnswerOptions = quizQuestions.map((question) => this.shuffleArray(question.answers));
 
     this.setState({
@@ -44,10 +47,29 @@ class App extends Component {
       answer: '',
       questionId: 1,
       answersCount: 0,
-      result: 0,
-      page: "Home"
+      result: -1,
+      page: "Home",
+      timer: 10
     });
   }
+
+
+  tick() {
+    var time = this.state.timer;
+    time--;
+    this.setState({
+      timer: time
+    })
+    if(time <= 0) {
+      this.timeout();
+      this.setState({
+        timer: 10
+      })
+    }
+
+  }
+
+
 
   shuffleArray(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -99,8 +121,20 @@ class App extends Component {
     this.setState({ result: result });
   }
 
+  timeout() {
+    this.setUserAnswer("-1");
+    this.nextSet();
+  }
+
   handleAnswerSelected(event) {
     this.setUserAnswer(event.currentTarget.value);
+    this.nextSet();
+    this.setState({ timer: 10 });
+  }
+
+  nextSet() {
+    clearInterval(this.intervalHandle);
+    this.intervalHandle = setInterval(this.tick, 1000);
     if (this.state.questionId < quizQuestions.length) {
         setTimeout(() => this.setNextQuestion(), 300);
       } else {
@@ -118,6 +152,8 @@ class App extends Component {
         questionTotal={quizQuestions.length}
         onAnswerSelected={this.handleAnswerSelected}
         button={this.componentWillMount}
+        timer={this.state.timer}
+        tick={this.tick}
       />
     );
   }
@@ -128,6 +164,7 @@ class App extends Component {
 
   changeToQuiz(event) {
     this.setState({ page: "Quiz" });
+    this.intervalHandle = setInterval(this.tick, 1000);
   }
 
   changeToInfo(event) {
@@ -141,7 +178,7 @@ class App extends Component {
   }
 
   renderQuizContent() {
-    if(this.state.result > 0) {
+    if(this.state.result > -1) {
       return this.renderResult();
     }
     else {

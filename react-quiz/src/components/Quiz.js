@@ -4,6 +4,7 @@ import Question from '../components/Question';
 import QuestionCount from '../components/QuestionCount';
 import AnswerOption from '../components/AnswerOption';
 import Option from '../components/Option';
+import Timer from '../components/Timer';
 
 import { CSSTransitionGroup } from 'react-transition-group';
 
@@ -28,6 +29,7 @@ function Quiz(props) {
 
   return (
   <div>
+
     <Option name="Home" side="option top" change={returnToHome}/>
     <CSSTransitionGroup
       className="container"
@@ -39,7 +41,7 @@ function Quiz(props) {
       transitionAppearTimeout={500}
     >
       <div key={props.questionId}>
-
+      <Timer time={props.timer}/>
         <QuestionCount counter={props.questionId} total={props.questionTotal} />
         <Question content={props.question}/>
         <ul className="answerOptions">
@@ -61,7 +63,8 @@ function Quiz(props) {
     questionId: PropTypes.number.isRequired,
     questionTotal: PropTypes.number.isRequired,
     onAnswerSelected: PropTypes.func.isRequired,
-    button : PropTypes.func.isRequired
+    button : PropTypes.func.isRequired,
+    timer : PropTypes.number.isRequired
   };
 
   export default Quiz;
