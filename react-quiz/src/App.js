@@ -5,6 +5,7 @@ import Quiz from './components/Quiz';
 import Info from './components/Info';
 import Result from './components/Result';
 import Option from './components/Option';
+import Particle from './components/Particles';
 import logo from './svg/coeliacLogo.png';
 import './App.css';
 
@@ -23,7 +24,8 @@ class App extends Component {
      answersCount: 0,
      result: -1,
      page: '',
-     timer: 10
+     timer: 10,
+     particles: false
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
@@ -32,6 +34,9 @@ class App extends Component {
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
     this.tick = this.tick.bind(this);
+    this.correctColour = {r:0, g:255, b:0, a:180};
+    this.incorrectColour = {r:255, g:0, b:0, a:180};
+    this.colour = this.correctColour;
   }
 
   componentWillMount() {
@@ -49,7 +54,8 @@ class App extends Component {
       answersCount: 0,
       result: -1,
       page: "Home",
-      timer: 10
+      timer: 10,
+      particles: false
     });
   }
 
@@ -93,9 +99,13 @@ class App extends Component {
       answer: answer
     }));
     if(answer === this.state.correct) {
+      this.colour = this.correctColour;
       this.setState((state) => ({
         answersCount: state.answersCount + 1,
       }));
+    }
+    else {
+      this.colour = this.incorrectColour;
     }
   }
 
@@ -108,7 +118,8 @@ class App extends Component {
       question: quizQuestions[counter].question,
       correct: quizQuestions[counter].correct,
       answerOptions: quizQuestions[counter].answers,
-      answer: ''
+      answer: '',
+      particles: false
     });
   }
 
@@ -129,7 +140,11 @@ class App extends Component {
   handleAnswerSelected(event) {
     this.setUserAnswer(event.currentTarget.value);
     this.nextSet();
-    this.setState({ timer: 10 });
+    this.setState({
+       timer: 10,
+       particles: true
+      });
+
   }
 
   nextSet() {
@@ -143,19 +158,30 @@ class App extends Component {
   }
 
   renderQuiz() {
-    return (
-      <Quiz
-        answer={this.state.answer}
-        answerOptions={this.state.answerOptions}
-        questionId={this.state.questionId}
-        question={this.state.question}
-        questionTotal={quizQuestions.length}
-        onAnswerSelected={this.handleAnswerSelected}
-        button={this.componentWillMount}
-        timer={this.state.timer}
-        tick={this.tick}
-      />
-    );
+      return (
+          <div>
+            {this.state.particles &&
+              <Particle
+                particleAmount={400}
+                particleSpeed={1.0}
+                particleRadius={1.0}
+                colour={this.colour}
+              />
+            }
+            <Quiz
+              answer={this.state.answer}
+              answerOptions={this.state.answerOptions}
+              questionId={this.state.questionId}
+              question={this.state.question}
+              questionTotal={quizQuestions.length}
+              onAnswerSelected={this.handleAnswerSelected}
+              button={this.componentWillMount}
+              timer={this.state.timer}
+              tick={this.tick}
+            />
+          </div>
+
+      );
   }
 
   changeToHome(event) {

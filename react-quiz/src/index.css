@@ -17,6 +17,13 @@ code {
   box-sizing: border-box;
 }
 
+canvas {
+    display:block;
+    background: rgb(33,36,50, 0);
+    position: fixed;
+    z-index: 1;
+}
+
 body {
   margin: 0;
   padding: 0;
