@@ -17,7 +17,7 @@ import Option from '../components/Option';
         >
           <div>
             You got <strong>{props.quizResult}</strong> correct!
-
+            Your score: <strong>{props.quizScore}</strong>
           </div>
         </CSSTransitionGroup>
         <Option name="Home" side="option bottom" change={props.button}/>
@@ -28,6 +28,7 @@ import Option from '../components/Option';
   }
 
   Result.propTypes = {
+    quizScore: PropTypes.number.isRequired,
     quizResult: PropTypes.number.isRequired,
     button: PropTypes.func.isRequired
   };

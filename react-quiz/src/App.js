@@ -25,7 +25,8 @@ class App extends Component {
      result: -1,
      page: '',
      timer: 10,
-     particles: false
+     particles: false,
+     score: 0
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
@@ -55,7 +56,8 @@ class App extends Component {
       result: -1,
       page: "Home",
       timer: 10,
-      particles: false
+      particles: false,
+      score: 0
     });
   }
 
@@ -102,6 +104,7 @@ class App extends Component {
       this.colour = this.correctColour;
       this.setState((state) => ({
         answersCount: state.answersCount + 1,
+        score: state.score + (10 * state.timer)
       }));
     }
     else {
@@ -199,7 +202,10 @@ class App extends Component {
 
   renderResult() {
     return (
-      <Result quizResult={this.state.result} button={this.componentWillMount}/>
+      <Result
+        quizScore={this.state.score}
+        quizResult={this.state.result}
+        button={this.componentWillMount}/>
     );
   }
 
