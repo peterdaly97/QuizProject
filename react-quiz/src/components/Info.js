@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import InfoPoint from '../components/InfoPoint';
 import Option from '../components/Option';
+import Search from '../components/Search'
 
 function Info(props) {
 
   function renderInfoPoints(key) {
-    console.log(key);
     return (
       <InfoPoint
         key={key}
@@ -19,6 +19,7 @@ function Info(props) {
   return (
     <div>
       <Option name="Home" side="option top" change={props.button}/>
+      <Search onChange={props.searchFunc}/>
       <ul className="info">
         {props.info.map(renderInfoPoints)}
       </ul>
@@ -28,7 +29,8 @@ function Info(props) {
 
 Info.propTypes = {
   info : PropTypes.array.isRequired,
-  button : PropTypes.func.isRequired
+  button : PropTypes.func.isRequired,
+  searchFunc : PropTypes.func.isRequired
 };
 
 

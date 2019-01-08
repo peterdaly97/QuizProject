@@ -34,7 +34,9 @@ class App extends Component {
     this.componentWillMount = this.componentWillMount.bind(this);
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
+    this.search = this.search.bind(this);
     this.tick = this.tick.bind(this);
+
     this.correctColour = {r:0, g:255, b:0, a:180};
     this.incorrectColour = {r:255, g:0, b:0, a:180};
     this.colour = this.correctColour;
@@ -46,6 +48,7 @@ class App extends Component {
 
     this.setState({
       info: infoContent[0].info,
+      infoSaved: infoContent[0].info,
       question: quizQuestions[0].question,
       correct: quizQuestions[0].correct,
       answerOptions: shuffledAnswerOptions[0],
@@ -61,7 +64,6 @@ class App extends Component {
     });
   }
 
-
   tick() {
     var time = this.state.timer;
     time--;
@@ -76,8 +78,6 @@ class App extends Component {
     }
 
   }
-
-
 
   shuffleArray(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -200,6 +200,21 @@ class App extends Component {
     this.setState({ page: "Info" });
   }
 
+  search(value) {
+    value = value.toLowerCase();
+    var array = [];
+    var title;
+    this.setState({ info: [] });
+    for (var j = 0; j < this.state.infoSaved.length; j++){
+      title = this.state.infoSaved[j].title;
+      title = title.toLowerCase();
+      if(title.includes(value)) {
+        array.push(this.state.infoSaved[j]);
+        this.setState({ info : array });
+      }
+    }
+  }
+
   renderResult() {
     return (
       <Result
@@ -224,6 +239,7 @@ class App extends Component {
       <Info
         info={this.state.info}
         button={this.changeToHome}
+        searchFunc={this.search}
       />
     );
   }
@@ -262,5 +278,8 @@ class App extends Component {
     )
   }
 }
+
+
+
 
 export default App;

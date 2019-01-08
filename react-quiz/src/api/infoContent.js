@@ -2,42 +2,42 @@ var infoContent = [
   {
     info: [
       {
-       title: "Point 1",
+       title: "Food",
        content: [
          "Coeliac disease is a lifelong autoimmune disease caused by a reaction to gluten.",
          "Ya"
        ]
       },
       {
-       title: "Point 2",
+       title: "Health",
        content: [
          "Coeliac disease is a lifelong autoimmune disease caused by a reaction to gluten.",
          "Ya"
        ]
       },
       {
-       title: "Point 3",
+       title: "Sport",
        content: [
          "Coeliac disease is a lifelong autoimmune disease caused by a reaction to gluten.",
          "Ya"
        ]
       },
       {
-       title: "Point 4",
+       title: "Music",
        content: [
          "Coeliac disease is a lifelong autoimmune disease caused by a reaction to gluten.",
          "Ya"
        ]
      },
       {
-       title: "Point 5",
+       title: "School",
        content: [
          "Coeliac disease is a lifelong autoimmune disease caused by a reaction to gluten.",
          "Ya"
        ]
      },
      {
-      title: "Point 6",
+      title: "Time",
       content: [
         "Coeliac disease is a lifelong autoimmune disease caused by a reaction to gluten.",
         "Ya"
