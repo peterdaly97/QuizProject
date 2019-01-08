@@ -36,6 +36,7 @@ class App extends Component {
     this.changeToInfo = this.changeToInfo.bind(this);
     this.search = this.search.bind(this);
     this.tick = this.tick.bind(this);
+    this.switch = this.switch.bind(this);
 
     this.correctColour = {r:0, g:255, b:0, a:180};
     this.incorrectColour = {r:255, g:0, b:0, a:180};
@@ -187,6 +188,16 @@ class App extends Component {
       );
   }
 
+  switch() {
+    if(this.state.page === "Info") {
+      this.setState({ page: "Personalised" });
+    }
+    else {
+      this.setState({ page: "Info" });
+    }
+
+  }
+
   changeToHome(event) {
     this.setState({ page: "Home" });
   }
@@ -234,11 +245,23 @@ class App extends Component {
     }
   }
 
+  renderPersonalisedContent() {
+    return (
+      <Info
+        info={[]}
+        button={this.changeToHome}
+        switch={this.switch}
+        searchFunc={this.search}
+      />
+  );
+}
+
   renderInfoContent() {
     return (
       <Info
         info={this.state.info}
         button={this.changeToHome}
+        switch={this.switch}
         searchFunc={this.search}
       />
     );
@@ -263,12 +286,16 @@ class App extends Component {
     else if(this.state.page === "Info") {
       return this.renderInfoContent();
     }
+    else if(this.state.page === "Personalised") {
+      return this.renderPersonalisedContent();
+    }
   }
 
 
   render() {
     return (
       <div className="App">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Info/Quiz</h2>

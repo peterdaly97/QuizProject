@@ -18,7 +18,8 @@ function Info(props) {
 
   return (
     <div>
-      <Option name="Home" side="option top" change={props.button}/>
+      <Option symbol="fa fa-home fa-3x" side="option top" change={props.button}/>
+      <Option symbol="fa fa-clone fa-3x" side="option switch" change={props.switch}/>
       <Search onChange={props.searchFunc}/>
       <ul className="info">
         {props.info.map(renderInfoPoints)}
@@ -30,6 +31,7 @@ function Info(props) {
 Info.propTypes = {
   info : PropTypes.array.isRequired,
   button : PropTypes.func.isRequired,
+  switch : PropTypes.func.isRequired,
   searchFunc : PropTypes.func.isRequired
 };
 

@@ -30,7 +30,7 @@ function Quiz(props) {
   return (
   <div>
 
-    <Option name="Home" side="option top" change={returnToHome}/>
+    <Option symbol="fa fa-home fa-3x" side="option top" change={returnToHome}/>
     <CSSTransitionGroup
       className="container"
       component="div"
