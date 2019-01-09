@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from 'react-transition-group';
 import Option from '../components/Option';
 
+
   function Result(props) {
+
+    function changeToInfo() {
+      props.button();
+      props.info();
+    }
+
     return (
       <div>
         <CSSTransitionGroup
@@ -20,7 +27,8 @@ import Option from '../components/Option';
             Your score: <strong>{props.quizScore}</strong>
           </div>
         </CSSTransitionGroup>
-        <Option name="Home" side="option bottom" change={props.button}/>
+        <Option name="Home" side="option right" change={props.button}/>
+        <Option name="Info" side="option left" change={changeToInfo}/>
       </div>
 
 
@@ -30,7 +38,8 @@ import Option from '../components/Option';
   Result.propTypes = {
     quizScore: PropTypes.number.isRequired,
     quizResult: PropTypes.number.isRequired,
-    button: PropTypes.func.isRequired
+    button: PropTypes.func.isRequired,
+    info: PropTypes.func.isRequired
   };
 
   export default Result;

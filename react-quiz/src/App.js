@@ -26,7 +26,9 @@ class App extends Component {
      page: '',
      timer: 10,
      particles: false,
-     score: 0
+     score: 0,
+     personalInfo: [],
+     personalSave: []
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
@@ -41,6 +43,8 @@ class App extends Component {
     this.correctColour = {r:0, g:255, b:0, a:180};
     this.incorrectColour = {r:255, g:0, b:0, a:180};
     this.colour = this.correctColour;
+
+    this.savedPersonals = [];
   }
 
   componentWillMount() {
@@ -110,6 +114,22 @@ class App extends Component {
     }
     else {
       this.colour = this.incorrectColour;
+      var array = this.state.personalInfo;
+      var category = quizQuestions[this.state.counter].category;
+
+      if(!this.savedPersonals.includes(category)) {
+        this.savedPersonals.push(category);
+        for (var j = 0; j < this.state.infoSaved.length; j++){
+          var title = this.state.infoSaved[j].title;
+          if(title === category) {
+            array.push(this.state.infoSaved[j]);
+            this.setState((state) => ({
+              personalSave: array
+            }));
+          }
+          console.log(this.state.personalSave);
+        }
+      }
     }
   }
 
@@ -214,14 +234,29 @@ class App extends Component {
   search(value) {
     value = value.toLowerCase();
     var array = [];
-    var title;
+    var title = "";
     this.setState({ info: [] });
-    for (var j = 0; j < this.state.infoSaved.length; j++){
-      title = this.state.infoSaved[j].title;
-      title = title.toLowerCase();
-      if(title.includes(value)) {
-        array.push(this.state.infoSaved[j]);
-        this.setState({ info : array });
+    this.setState({ personalInfo: [] });
+    if(this.state.page === "Info") {
+      for (var j = 0; j < this.state.infoSaved.length; j++){
+        title = this.state.infoSaved[j].title;
+        title = title.toLowerCase();
+        if(title.includes(value)) {
+          array.push(this.state.infoSaved[j]);
+          this.setState({ info : array });
+          this.setState({ personalInfo : this.state.personalSave });
+        }
+      }
+    }
+    else if(this.state.page === "Personalised") {
+      for (var j = 0; j < this.state.personalSave.length; j++){
+        title = this.state.personalSave[j].title;
+        title = title.toLowerCase();
+        if(title.includes(value)) {
+          array.push(this.state.personalSave[j]);
+          this.setState({ personalInfo : array });
+          this.setState({ info : this.state.infoSaved });
+        }
       }
     }
   }
@@ -231,7 +266,8 @@ class App extends Component {
       <Result
         quizScore={this.state.score}
         quizResult={this.state.result}
-        button={this.componentWillMount}/>
+        button={this.componentWillMount}
+        info={this.changeToInfo}/>
     );
   }
 
@@ -248,7 +284,7 @@ class App extends Component {
   renderPersonalisedContent() {
     return (
       <Info
-        info={[]}
+        info={this.state.personalInfo}
         button={this.changeToHome}
         switch={this.switch}
         searchFunc={this.search}
