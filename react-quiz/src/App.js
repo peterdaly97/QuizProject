@@ -306,8 +306,8 @@ class App extends Component {
   renderHome() {
     return (
       <div>
-        <Option name="Quiz" side="option right" change={this.changeToQuiz}/>
-        <Option name="Info" side="option left" change={this.changeToInfo}/>
+        <Option name=" Quiz" symbol="fa fa-gamepad" side="option right" change={this.changeToQuiz}/>
+        <Option name=" Info" symbol="fa fa-info" side="option left" change={this.changeToInfo}/>
       </div>
     );
   }
@@ -332,11 +332,16 @@ class App extends Component {
     return (
       <div className="App">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Info/Quiz</h2>
         </div>
-        {this.renderPage()}
+        <div className="App-content">
+          {this.renderPage()}
+        </div>
+        <div className="App-footer">
+        </div>
       </div>
     )
   }

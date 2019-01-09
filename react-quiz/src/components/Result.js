@@ -27,8 +27,8 @@ import Option from '../components/Option';
             Your score: <strong>{props.quizScore}</strong>
           </div>
         </CSSTransitionGroup>
-        <Option name="Home" side="option right" change={props.button}/>
-        <Option name="Info" side="option left" change={changeToInfo}/>
+        <Option symbol="fa fa-home" name=" Home" side="option right" change={props.button}/>
+        <Option symbol="fa fa-info" name=" Info" side="option left" change={changeToInfo}/>
       </div>
 
 

@@ -89,9 +89,8 @@ h3 {
 	display:inline-block;
 	cursor:pointer;
   text-align: center;
-  text-decoration: underline;
   text-shadow: 0.5px 0.5px black;
-  position: absolute;
+  position: fixed;
 }
 
 .timer {

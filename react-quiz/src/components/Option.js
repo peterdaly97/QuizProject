@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
   function Option(props) {
     return (
       <div>
-        <button className={props.side} onClick={props.change}>{props.name}<i class={props.symbol}></i></button>
+        <button className={props.side} onClick={props.change}><i class={props.symbol}></i>{props.name}</button>
       </div>
     );
   }
