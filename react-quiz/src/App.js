@@ -238,11 +238,11 @@ class App extends Component {
     this.setState({ info: [] });
     this.setState({ personalInfo: [] });
     if(this.state.page === "Info") {
-      for (var j = 0; j < this.state.infoSaved.length; j++){
-        title = this.state.infoSaved[j].title;
+      for (var i = 0; i < this.state.infoSaved.length; i++){
+        title = this.state.infoSaved[i].title;
         title = title.toLowerCase();
         if(title.includes(value)) {
-          array.push(this.state.infoSaved[j]);
+          array.push(this.state.infoSaved[i]);
           this.setState({ info : array });
           this.setState({ personalInfo : this.state.personalSave });
         }
@@ -341,6 +341,7 @@ class App extends Component {
           {this.renderPage()}
         </div>
         <div className="App-footer">
+          <h2 className="footerName">Peter Daly</h2>
         </div>
       </div>
     )

@@ -10,9 +10,9 @@ import PropTypes from 'prop-types';
   }
 
   Option.propTypes = {
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     side: PropTypes.string.isRequired,
-    change: PropTypes.func.isRequire,
+    change: PropTypes.func.isRequired,
     symbol: PropTypes.string
   };
 
