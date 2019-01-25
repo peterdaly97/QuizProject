@@ -202,7 +202,7 @@ h3 {
 
 .radioCustomButton:checked ~ .radioCustomLabel:before {
   content: '';
-  background: #8bc53f url(./svg/icon-check.svg) no-repeat;
+  background: #030500;
   background-size: 27px;
   border-color: #8bc53f;
 }

@@ -65,8 +65,23 @@ class App extends Component {
       page: "Home",
       timer: 10,
       particles: false,
-      score: 0
+      score: 0,
     });
+
+    this.UserList();
+  }
+
+  UserList() {
+    // Template API Call
+    fetch('https://randomuser.me/api/')
+      .then( results => {
+        return results.json();
+      }).then(data => {
+        // data.results[0] is the prefix to access user data
+        console.log(data.results[0]);
+      });
+      
+    
   }
 
   tick() {
@@ -335,7 +350,7 @@ class App extends Component {
 
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Info/Quiz</h2>
+          <h2>Quiz</h2>
         </div>
         <div className="App-content">
           {this.renderPage()}

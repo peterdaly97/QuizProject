@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "prop-types": "^15.6.2",
-    "react": "^16.6.3",
+    "react": "^16.7.0",
     "react-dom": "^16.6.3",
     "react-particle-animation": "^1.0.1",
     "react-particles-js": "^2.4.2",
