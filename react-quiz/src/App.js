@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import quizQuestions from './api/quizQuestions';
-import infoContent from './api/infoContent';
 import Quiz from './components/Quiz';
 import Info from './components/Info';
 import Result from './components/Result';
@@ -28,7 +27,8 @@ class App extends Component {
      particles: false,
      score: 0,
      personalInfo: [],
-     personalSave: []
+     personalSave: [],
+     response: '',
     };
 
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
@@ -52,8 +52,6 @@ class App extends Component {
     const shuffledAnswerOptions = quizQuestions.map((question) => this.shuffleArray(question.answers));
 
     this.setState({
-      info: infoContent[0].info,
-      infoSaved: infoContent[0].info,
       question: quizQuestions[0].question,
       correct: quizQuestions[0].correct,
       answerOptions: shuffledAnswerOptions[0],
@@ -66,22 +64,48 @@ class App extends Component {
       timer: 10,
       particles: false,
       score: 0,
+      response: ''
     });
 
     this.UserList();
   }
 
   UserList() {
-    // Template API Call
-    fetch('https://randomuser.me/api/')
-      .then( results => {
-        return results.json();
-      }).then(data => {
-        // data.results[0] is the prefix to access user data
-        console.log(data.results[0]);
-      });
-      
-    
+    this.callApi();
+  }
+
+  async callApi() {
+    const response = await fetch('/info');
+    this.infoReceived = await response.json();      
+    this.infoTitles = [];
+    this.infoContent = [];
+
+    for(var i = 0; i < this.infoReceived.length; i++) {
+
+      if(!this.infoTitles.includes(this.infoReceived[i][1])) {
+
+        this.infoTitles.push(this.infoReceived[i][1]);
+        var newContentArray = [];
+
+        for(var j = i; j < this.infoReceived.length && this.infoReceived[i][0] === this.infoReceived[j][0]; j++) {
+          newContentArray.push(this.infoReceived[j][3]);
+        }
+        this.infoContent.push(newContentArray);
+      }
+    }
+
+    this.wholeArray = [];
+    for(var k = 0; k < this.infoTitles.length; k++) {
+      var object = {};
+      object.title = this.infoTitles[k];
+      object.content = this.infoContent[k];
+      this.wholeArray.push(object);
+    }
+
+    this.setState({
+      info : this.wholeArray,
+      infoSaved: this.wholeArray
+    });
   }
 
   tick() {
