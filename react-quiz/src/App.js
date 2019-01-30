@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import quizQuestions from './api/quizQuestions';
 import Quiz from './components/Quiz';
 import Info from './components/Info';
 import Result from './components/Result';
@@ -49,12 +48,10 @@ class App extends Component {
 
   componentWillMount() {
     clearInterval(this.intervalHandle);
-    const shuffledAnswerOptions = quizQuestions.map((question) => this.shuffleArray(question.answers));
+    this.UserList();
+    
 
     this.setState({
-      question: quizQuestions[0].question,
-      correct: quizQuestions[0].correct,
-      answerOptions: shuffledAnswerOptions[0],
       counter: 0,
       answer: '',
       questionId: 1,
@@ -67,7 +64,7 @@ class App extends Component {
       response: ''
     });
 
-    this.UserList();
+    
   }
 
   UserList() {
@@ -76,36 +73,21 @@ class App extends Component {
 
   async callApi() {
     const response = await fetch('/info');
-    this.infoReceived = await response.json();      
-    this.infoTitles = [];
-    this.infoContent = [];
+    this.infoReceived = await response.json();   
 
-    for(var i = 0; i < this.infoReceived.length; i++) {
+    const quizResponse = await fetch('/quiz');
+    this.quizReceived = await quizResponse.json(); 
 
-      if(!this.infoTitles.includes(this.infoReceived[i][1])) {
-
-        this.infoTitles.push(this.infoReceived[i][1]);
-        var newContentArray = [];
-
-        for(var j = i; j < this.infoReceived.length && this.infoReceived[i][0] === this.infoReceived[j][0]; j++) {
-          newContentArray.push(this.infoReceived[j][3]);
-        }
-        this.infoContent.push(newContentArray);
-      }
-    }
-
-    this.wholeArray = [];
-    for(var k = 0; k < this.infoTitles.length; k++) {
-      var object = {};
-      object.title = this.infoTitles[k];
-      object.content = this.infoContent[k];
-      this.wholeArray.push(object);
-    }
-
+    const shuffledAnswerOptions = this.quizReceived.map((question) => this.shuffleArray(this.quizReceived[0].answers));
+    
     this.setState({
-      info : this.wholeArray,
-      infoSaved: this.wholeArray
+      info : this.infoReceived,
+      infoSaved: this.infoReceived,
+      question: this.quizReceived[0].question,
+      correct: this.quizReceived[0].correct,
+      answerOptions: shuffledAnswerOptions[0]
     });
+    //console.log(this.quizReceived);   
   }
 
   tick() {
@@ -154,7 +136,7 @@ class App extends Component {
     else {
       this.colour = this.incorrectColour;
       var array = this.state.personalInfo;
-      var category = quizQuestions[this.state.counter].category;
+      var category = this.quizReceived[this.state.counter].category;
 
       if(!this.savedPersonals.includes(category)) {
         this.savedPersonals.push(category);
@@ -166,7 +148,6 @@ class App extends Component {
               personalSave: array
             }));
           }
-          console.log(this.state.personalSave);
         }
       }
     }
@@ -178,9 +159,9 @@ class App extends Component {
     this.setState({
       counter: counter,
       questionId: questionId,
-      question: quizQuestions[counter].question,
-      correct: quizQuestions[counter].correct,
-      answerOptions: quizQuestions[counter].answers,
+      question: this.quizReceived[counter].question,
+      correct: this.quizReceived[counter].correct,
+      answerOptions: this.quizReceived[counter].answers,
       answer: '',
       particles: false
     });
@@ -213,7 +194,7 @@ class App extends Component {
   nextSet() {
     clearInterval(this.intervalHandle);
     this.intervalHandle = setInterval(this.tick, 1000);
-    if (this.state.questionId < quizQuestions.length) {
+    if (this.state.questionId < this.quizReceived.length) {
         setTimeout(() => this.setNextQuestion(), 300);
       } else {
         setTimeout(() => this.setResults(this.getResults()), 300);
@@ -236,7 +217,7 @@ class App extends Component {
               answerOptions={this.state.answerOptions}
               questionId={this.state.questionId}
               question={this.state.question}
-              questionTotal={quizQuestions.length}
+              questionTotal={this.quizReceived.length}
               onAnswerSelected={this.handleAnswerSelected}
               button={this.componentWillMount}
               timer={this.state.timer}
