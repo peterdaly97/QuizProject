@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Quiz from './components/Quiz';
 import Info from './components/Info';
-import Result from './components/Result';
 import Option from './components/Option';
 import Particle from './components/Particles';
 import logo from './svg/coeliacLogo.png';
@@ -35,9 +34,8 @@ class App extends Component {
     this.componentWillMount = this.componentWillMount.bind(this);
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
-    this.search = this.search.bind(this);
     this.tick = this.tick.bind(this);
-    this.switch = this.switch.bind(this);
+    
 
     this.correctColour = {r:0, g:255, b:0, a:180};
     this.incorrectColour = {r:255, g:0, b:0, a:180};
@@ -87,7 +85,7 @@ class App extends Component {
       correct: this.quizReceived[0].correct,
       answerOptions: shuffledAnswerOptions[0]
     });
-    //console.log(this.quizReceived);   
+    console.log(this.quizReceived);   
   }
 
   tick() {
@@ -204,7 +202,7 @@ class App extends Component {
   renderQuiz() {
       return (
           <div>
-            {this.state.particles &&
+            {this.state.particles && this.state.result === -1 &&
               <Particle
                 particleAmount={400}
                 particleSpeed={1.0}
@@ -222,20 +220,14 @@ class App extends Component {
               button={this.componentWillMount}
               timer={this.state.timer}
               tick={this.tick}
+              quizScore={this.state.score}
+              quizResult={this.state.result}
+              button={this.componentWillMount}
+              info={this.changeToInfo}
             />
           </div>
 
       );
-  }
-
-  switch() {
-    if(this.state.page === "Info") {
-      this.setState({ page: "Personalised" });
-    }
-    else {
-      this.setState({ page: "Info" });
-    }
-
   }
 
   changeToHome(event) {
@@ -251,73 +243,18 @@ class App extends Component {
     this.setState({ page: "Info" });
   }
 
-  search(value) {
-    value = value.toLowerCase();
-    var array = [];
-    var title = "";
-    this.setState({ info: [] });
-    this.setState({ personalInfo: [] });
-    if(this.state.page === "Info") {
-      for (var i = 0; i < this.state.infoSaved.length; i++){
-        title = this.state.infoSaved[i].title;
-        title = title.toLowerCase();
-        if(title.includes(value)) {
-          array.push(this.state.infoSaved[i]);
-          this.setState({ info : array });
-          this.setState({ personalInfo : this.state.personalSave });
-        }
-      }
-    }
-    else if(this.state.page === "Personalised") {
-      for (var j = 0; j < this.state.personalSave.length; j++){
-        title = this.state.personalSave[j].title;
-        title = title.toLowerCase();
-        if(title.includes(value)) {
-          array.push(this.state.personalSave[j]);
-          this.setState({ personalInfo : array });
-          this.setState({ info : this.state.infoSaved });
-        }
-      }
-    }
-  }
-
-  renderResult() {
-    return (
-      <Result
-        quizScore={this.state.score}
-        quizResult={this.state.result}
-        button={this.componentWillMount}
-        info={this.changeToInfo}/>
-    );
-  }
-
   renderQuizContent() {
-    if(this.state.result > -1) {
-      return this.renderResult();
-    }
-    else {
-
-      return this.renderQuiz();
-    }
+    return this.renderQuiz();
   }
-
-  renderPersonalisedContent() {
-    return (
-      <Info
-        info={this.state.personalInfo}
-        button={this.changeToHome}
-        switch={this.switch}
-        searchFunc={this.search}
-      />
-  );
-}
 
   renderInfoContent() {
     return (
       <Info
         info={this.state.info}
+        personalInfo={this.state.personalInfo}
+        infoSaved={this.state.infoSaved}
+        personalSave={this.state.personalSave}
         button={this.changeToHome}
-        switch={this.switch}
         searchFunc={this.search}
       />
     );

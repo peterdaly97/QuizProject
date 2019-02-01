@@ -1,12 +1,71 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import InfoPoint from '../components/InfoPoint';
 import Option from '../components/Option';
 import Search from '../components/Search'
 
-function Info(props) {
+class Info extends Component {
 
-  function renderInfoPoints(key) {
+  constructor() {
+    super();
+    
+    this.state = {
+      page: 'Info',
+      info: [],
+      personalInfo: []   
+     };
+
+     this.switch = this.switch.bind(this);
+     this.search = this.search.bind(this);
+
+     
+  }
+
+ componentWillMount() {
+  this.setState({
+    info: this.props.info,
+    personalInfo: this.props.personalInfo
+   });
+ }
+
+ search(value) {
+  value = value.toLowerCase();
+  var array = [];
+  var title = "";
+  this.setState({
+    info: [],
+    personalInfo: []
+   });
+  
+  if(this.state.page === "Info") {
+    for (var i = 0; i < this.props.infoSaved.length; i++){
+      title = this.props.infoSaved[i].title;
+      title = title.toLowerCase();
+      if(title.includes(value)) {
+        array.push(this.props.infoSaved[i]);
+        this.setState({
+          info: array,
+          personalInfo: this.props.personalSave
+         });
+      }
+    }
+  }
+  else if(this.state.page === "Personalised") {
+    for (var j = 0; j < this.props.personalSave.length; j++){
+      title = this.props.personalSave[j].title;
+      title = title.toLowerCase();
+      if(title.includes(value)) {
+        array.push(this.props.personalSave[j]);
+        this.setState({
+          info: this.props.infoSaved,
+          personalInfo: array
+         });
+      }
+    }
+  }
+}
+
+  renderInfoPoints(key) {
     return (
       <InfoPoint
         key={key}
@@ -16,24 +75,44 @@ function Info(props) {
     );
   }
 
-  return (
-    <div>
-      <Option symbol="fa fa-home fa-3x" side="option top" change={props.button}/>
-      <Option symbol="fa fa-clone fa-3x" side="option switch" change={props.switch}/>
-      <Search onChange={props.searchFunc}/>
-      <ul className="info">
-        {props.info.map(renderInfoPoints)}
-      </ul>
-    </div>
-  );
-}
+  switch() {
+    if(this.state.page === "Info") {
+      this.setState({ page: "Personalised" });
+    }
+    else {
+      this.setState({ page: "Info" });
+    }
 
-Info.propTypes = {
-  info : PropTypes.array.isRequired,
-  button : PropTypes.func.isRequired,
-  switch : PropTypes.func.isRequired,
-  searchFunc : PropTypes.func.isRequired
-};
+  }
+
+  render() {
+    if(this.state.page === "Info") {
+      return (
+        <div>
+          <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
+          <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
+          <Search onChange={this.search}/>
+          <ul className="info">
+            {this.state.info.map(this.renderInfoPoints)}
+          </ul>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div>
+          <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
+          <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
+          <Search onChange={this.search}/>
+          <ul className="info">
+            {this.state.personalInfo.map(this.renderInfoPoints)}
+          </ul>
+        </div>
+      );
+    }
+    
+  }
+}
 
 
 export default Info;
