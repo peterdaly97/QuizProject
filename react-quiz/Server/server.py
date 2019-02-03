@@ -33,7 +33,6 @@ def api_info_points():
     cursor = mariadb_connection.cursor(buffered=True) 
     cursor.execute("SELECT p.*, pf.* FROM info p INNER JOIN info_content pf ON pf.info_title_id = p.id")
     result = cursor.fetchall()
-    print(result);
     
     infoTitles = []
     infoContent = []

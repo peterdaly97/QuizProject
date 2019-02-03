@@ -71,14 +71,15 @@ h3 {
   width: 300px;
   border: 2px solid #1c73ff;
   padding-left: 25px;
-  margin-bottom: 25px;
+  margin-bottom: 50px;
   background: #c0c7d1;
 }
 
 /* Question Component */
 .question {
   margin: 0;
-  padding: 0.5rem 2.5rem 1.5rem 2.5rem;
+  padding-left: 2%;
+  padding-right: 2%;
   border: 50px solid #fff;
 }
 
@@ -94,8 +95,8 @@ h3 {
 }
 
 .timer {
-  position: absolute;
-  top: -30%;
+  position: fixed;
+  top: -4%;
   right: 5%;
   font-size: 32px;
   color: white;
