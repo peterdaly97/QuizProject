@@ -6,6 +6,7 @@ import AnswerOption from '../components/AnswerOption';
 import Option from '../components/Option';
 import Timer from '../components/Timer';
 import Result from '../components/Result';
+import Confirm from '../components/Confirm';
 import Particle from '../components/Particles';
 
 import { CSSTransitionGroup } from 'react-transition-group';
@@ -24,7 +25,7 @@ class Quiz extends Component {
       answer: '',
       answersCount: 0,
       result: -1,
-      page: 'Quiz',
+      page: 'Confirm',
       timer: 10,
       particles: false,
       score: 0
@@ -34,12 +35,11 @@ class Quiz extends Component {
     this.returnToHome = this.returnToHome.bind(this);
     this.tick = this.tick.bind(this);
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
+    this.changeToQuiz = this.changeToQuiz.bind(this);
 
     this.correctColour = {r:0, g:255, b:0, a:180};
     this.incorrectColour = {r:255, g:0, b:0, a:180};
     this.colour = this.correctColour;
-
-    this.intervalHandle = setInterval(this.tick, 1000);
 
     this.quizReceived = [];
   }
@@ -95,6 +95,19 @@ class Quiz extends Component {
     return array;
   };
 
+  changeToQuiz() {
+    this.intervalHandle = setInterval(this.tick, 1000);
+    this.setState((state) => ({
+      page: 'Quiz'
+    }));
+  }
+
+  changeToResult() {
+    this.setState((state) => ({
+      page: 'Result'
+    }));
+  }
+
   setUserAnswer(answer) {
     this.setState((state) => ({
       answer: answer
@@ -136,6 +149,7 @@ class Quiz extends Component {
 
   setResults (result) {
     this.setState({ result: result });
+    this.changeToResult();
   }
 
   timeout() {
@@ -181,7 +195,15 @@ class Quiz extends Component {
   }
 
   render() {
-    if(this.state.result === -1) {
+    if(this.state.page === 'Confirm') {
+      return (
+        <Confirm
+          home={this.returnToHome}
+          confirm={this.changeToQuiz}
+        />
+      );
+    }
+    else if(this.state.page === 'Quiz') {
       return (
         <div>
           {this.state.particles && this.state.result === -1 &&
@@ -215,7 +237,7 @@ class Quiz extends Component {
         </div>
         );
     }
-    else {
+    else if(this.state.page === 'Result') {
       return (
         <Result
           quizScore={this.state.score}

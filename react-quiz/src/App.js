@@ -13,7 +13,8 @@ class App extends Component {
     this.state = {
      page: '',
      personalInfo: [],
-     personalSave: []
+     personalSave: [],
+     title: "Home"
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -71,7 +72,7 @@ class App extends Component {
       return (
           <div>
             <Quiz
-              button={this.componentWillMount}
+              button={this.changeToHome}
               info={this.changeToInfo}
               append={this.appendToInfo}
             />
@@ -81,16 +82,25 @@ class App extends Component {
   }
 
   changeToHome(event) {
-    this.setState({ page: "Home" });
+    this.setState({ 
+      page: "Home",
+      title: "Home" 
+    });
   }
 
   changeToQuiz(event) {
-    this.setState({ page: "Quiz" });
+    this.setState({ 
+      page: "Quiz", 
+      title: "Quiz"
+    });
     this.intervalHandle = setInterval(this.tick, 1000);
   }
 
   changeToInfo(event) {
-    this.setState({ page: "Info" });
+    this.setState({ 
+      page: "Info",
+      title: "Information"
+    });
   }
 
   renderQuizContent() {
@@ -129,9 +139,6 @@ class App extends Component {
     else if(this.state.page === "Info") {
       return this.renderInfoContent();
     }
-    else if(this.state.page === "Personalised") {
-      return this.renderPersonalisedContent();
-    }
   }
 
 
@@ -142,7 +149,7 @@ class App extends Component {
 
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Quiz</h2>
+          <h2>{this.state.title}</h2>
         </div>
         <div className="App-content">
           {this.renderPage()}

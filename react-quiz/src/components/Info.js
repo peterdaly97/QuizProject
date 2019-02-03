@@ -12,7 +12,7 @@ class Info extends Component {
     this.state = {
       page: 'Info',
       info: [],
-      personalInfo: []   
+      personalInfo: []
      };
 
      this.switch = this.switch.bind(this);
@@ -104,6 +104,7 @@ class Info extends Component {
           <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
           <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
           <Search onChange={this.search}/>
+          <h4> This Info has been personalised for you </h4>
           <ul className="info">
             {this.state.personalInfo.map(this.renderInfoPoints)}
           </ul>

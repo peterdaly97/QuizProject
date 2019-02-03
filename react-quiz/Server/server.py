@@ -13,10 +13,10 @@ mariadb_connection = mariadb.connect(user='root',
 def api_root():
     return 'Welcome'
 
-@app.route('/users', methods=['GET'])
-def api_users():
+@app.route('/highScore', methods=['GET'])
+def api_high_score():
     cursor = mariadb_connection.cursor(buffered=True) 
-    cursor.execute("SELECT * FROM Users")
+    cursor.execute("SELECT highscore FROM Users where username='peterdaly'")
     result = cursor.fetchall()
     return Response(
         json.dumps(result),
