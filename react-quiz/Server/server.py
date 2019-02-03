@@ -1,4 +1,4 @@
-from flask import Flask, url_for, Response
+from flask import Flask, url_for, Response, request
 import pypyodbc
 import mysql.connector as mariadb
 import json
@@ -12,6 +12,28 @@ mariadb_connection = mariadb.connect(user='root',
 @app.route('/')
 def api_root():
     return 'Welcome'
+
+@app.route('/score', methods=['POST'])
+def api_check_score():
+    #print(request.get_json()['score'])
+    cursor = mariadb_connection.cursor(buffered=True) 
+    cursor.execute("SELECT highscore FROM Users WHERE username='peterdaly'")
+    result = cursor.fetchall()
+    val = request.get_json()['score']
+    if result[0][0] < val :
+        print("1")
+        cursor.execute("UPDATE Users SET highscore = " + str(val) + " WHERE username = 'peterdaly'")
+        print("2")
+        mariadb_connection.commit()
+        print("3")
+    return Response(
+        None,
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 @app.route('/highScore', methods=['GET'])
 def api_high_score():

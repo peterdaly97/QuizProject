@@ -23,20 +23,21 @@ import Option from '../components/Option';
     }
 
     async callApi() {
-      // fetch('/highScore', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Accept': 'application/json',
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     score: this.props.quizScore
-      //   })
-      // })
-      const scoreResponse = await fetch('/highScore', {
-        method: 'GET'
+      await fetch('/score', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          score: this.props.quizScore
+        })
       });
+      console.log("Ding");
+      const scoreResponse = await fetch('/highScore');
       this.scoreReceived = await scoreResponse.json(); 
+
+      console.log(this.scoreReceived[0][0]);
 
       this.setState({
         score: this.props.quizScore,
