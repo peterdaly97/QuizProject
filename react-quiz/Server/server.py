@@ -13,32 +13,53 @@ mariadb_connection = mariadb.connect(user='root',
 def api_root():
     return 'Welcome'
 
+@app.route('/LogIn', methods=['POST'])
+def api_LogIn():
+    #print(request.get_json()['score'])
+    username = request.get_json()['username']
+    cursor = mariadb_connection.cursor(buffered=True) 
+    cursor.execute("SELECT password FROM Users WHERE username='" + str(username) + "'")
+    result = cursor.fetchall()
+
+    password = request.get_json()['password']
+    if len(result) > 0 and result[0][0] == password :
+        accept = True
+        return Response(
+            json.dumps(accept),
+            mimetype='application/json',
+            headers={
+                'Cache-Control': 'no-cache',
+                'Access-Control-Allow-Origin': '*'
+            }
+        )
+    else :
+        accept = False
+        return Response(
+            json.dumps(accept),
+            mimetype='application/json',
+            headers={
+                'Cache-Control': 'no-cache',
+                'Access-Control-Allow-Origin': '*'
+            }
+        )
+
+
 @app.route('/score', methods=['POST'])
 def api_check_score():
+    username = request.get_json()['username']
     #print(request.get_json()['score'])
     cursor = mariadb_connection.cursor(buffered=True) 
-    cursor.execute("SELECT highscore FROM Users WHERE username='peterdaly'")
+    cursor.execute("SELECT highscore FROM Users WHERE username='" + str(username) + "'")
     result = cursor.fetchall()
     val = request.get_json()['score']
     if result[0][0] < val :
         print("1")
-        cursor.execute("UPDATE Users SET highscore = " + str(val) + " WHERE username = 'peterdaly'")
+        cursor.execute("UPDATE Users SET highscore = " + str(val) + " WHERE username = '" + str(username) + "'")
         print("2")
         mariadb_connection.commit()
         print("3")
-    return Response(
-        None,
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
-    )
 
-@app.route('/highScore', methods=['GET'])
-def api_high_score():
-    cursor = mariadb_connection.cursor(buffered=True) 
-    cursor.execute("SELECT highscore FROM Users where username='peterdaly'")
+    cursor.execute("SELECT highscore FROM Users where username='" + str(username) + "'")
     result = cursor.fetchall()
     return Response(
         json.dumps(result),
@@ -48,6 +69,8 @@ def api_high_score():
             'Access-Control-Allow-Origin': '*'
         }
     )
+
+
 
 
 @app.route('/info', methods=['GET'])

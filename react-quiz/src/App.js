@@ -3,6 +3,7 @@ import Quiz from './components/Quiz';
 import Info from './components/Info';
 import Option from './components/Option';
 import logo from './svg/coeliacLogo.png';
+import LogIn from './components/LogIn';
 import './App.css';
 
 class App extends Component {
@@ -14,7 +15,8 @@ class App extends Component {
      page: '',
      personalInfo: [],
      personalSave: [],
-     title: "Home"
+     title: "LogIn",
+     username: ""
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -22,6 +24,8 @@ class App extends Component {
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
     this.appendToInfo = this.appendToInfo.bind(this);
+
+    this.logIn = this.logIn.bind(this);
   
     this.savedPersonals = [];
   }
@@ -31,7 +35,7 @@ class App extends Component {
     
 
     this.setState({
-      page: "Home"
+      page: "LogIn"
     });
 
     
@@ -75,6 +79,7 @@ class App extends Component {
               button={this.changeToHome}
               info={this.changeToInfo}
               append={this.appendToInfo}
+              username={this.state.username}
             />
           </div>
 
@@ -85,6 +90,13 @@ class App extends Component {
     this.setState({ 
       page: "Home",
       title: "Home" 
+    });
+  }
+
+  logIn(username) {
+    this.setState({ 
+      page: "Home",
+      username: username 
     });
   }
 
@@ -101,6 +113,14 @@ class App extends Component {
       page: "Info",
       title: "Information"
     });
+  }
+
+  renderLogIn() {
+    return (
+      <LogIn
+        button={this.logIn}
+      />
+    );
   }
 
   renderQuizContent() {
@@ -130,7 +150,10 @@ class App extends Component {
   }
 
   renderPage() {
-    if(this.state.page === "Home") {
+    if(this.state.page === "LogIn") {
+      return this.renderLogIn();
+    }
+    else if(this.state.page === "Home") {
       return this.renderHome();
     }
     else if(this.state.page === "Quiz") {

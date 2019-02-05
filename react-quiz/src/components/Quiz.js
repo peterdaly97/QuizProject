@@ -243,7 +243,9 @@ class Quiz extends Component {
           quizScore={this.state.score}
           quizResult={this.state.result}
           button={this.props.button}
-          info={this.props.info}/>
+          info={this.props.info}
+          username={this.props.username}
+          />
       );
     }
   }

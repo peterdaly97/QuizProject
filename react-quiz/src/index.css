@@ -118,6 +118,43 @@ input:focus {
   border: 50px solid #fff;
 }
 
+form {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-top: 20%;
+  font-size: 40px;
+  background: #c0c7d1;
+  border: 2px solid #1c73ff;
+  width: 90%;
+  margin-left: 6%;
+}
+
+.SubmitForm {
+  border:2px solid #1978ab;
+  text-shadow: 0.5px 0.5px black;
+  width: 70%;
+  height: 40px;
+}
+
+.LogIn {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border: 2px solid grey;
+  border-radius: 4px;
+}
+
+.fail {
+  border: 2px solid red;
+}
+
+.LogIn:focus {
+  width: 60%;
+}
+
+h5 {
+  font-size: 16px;
+}
+
 
 .option {
 
