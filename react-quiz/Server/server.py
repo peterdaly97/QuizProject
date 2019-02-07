@@ -18,7 +18,7 @@ def api_LogIn():
     #print(request.get_json()['score'])
     username = request.get_json()['username']
     cursor = mariadb_connection.cursor(buffered=True) 
-    cursor.execute("SELECT password FROM Users WHERE username='" + str(username) + "'")
+    cursor.execute("SELECT password FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
 
     password = request.get_json()['password']
@@ -49,17 +49,18 @@ def api_check_score():
     username = request.get_json()['username']
     #print(request.get_json()['score'])
     cursor = mariadb_connection.cursor(buffered=True) 
-    cursor.execute("SELECT highscore FROM Users WHERE username='" + str(username) + "'")
+    cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
     val = request.get_json()['score']
     if result[0][0] < val :
         print("1")
-        cursor.execute("UPDATE Users SET highscore = " + str(val) + " WHERE username = '" + str(username) + "'")
+        cursor.execute("UPDATE Users SET highscore = %s WHERE username = %s;", (str(val), str(username)))
+        
         print("2")
         mariadb_connection.commit()
         print("3")
-
-    cursor.execute("SELECT highscore FROM Users where username='" + str(username) + "'")
+        
+    cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
     return Response(
         json.dumps(result),
