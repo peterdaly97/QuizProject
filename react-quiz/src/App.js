@@ -4,6 +4,7 @@ import Info from './components/Info';
 import Option from './components/Option';
 import logo from './svg/coeliacLogo.png';
 import LogIn from './components/LogIn';
+import SignUp from './components/SignUp'
 import './App.css';
 
 class App extends Component {
@@ -15,7 +16,7 @@ class App extends Component {
      page: '',
      personalInfo: [],
      personalSave: [],
-     title: "LogIn",
+     title: "Log In",
      username: ""
     };
 
@@ -23,6 +24,9 @@ class App extends Component {
     this.componentWillMount = this.componentWillMount.bind(this);
     this.changeToQuiz = this.changeToQuiz.bind(this);
     this.changeToInfo = this.changeToInfo.bind(this);
+    this.changeToSignUp = this.changeToSignUp.bind(this);
+    this.changeToLogIn = this.changeToLogIn.bind(this);
+
     this.appendToInfo = this.appendToInfo.bind(this);
 
     this.logIn = this.logIn.bind(this);
@@ -115,10 +119,34 @@ class App extends Component {
     });
   }
 
+  changeToLogIn(event) {
+    this.setState({ 
+      page: "LogIn",
+      title: "Log In" 
+    });
+  }
+
+  changeToSignUp(event) {
+    this.setState({ 
+      page: "SignUp",
+      title: "Sign Up" 
+    });
+  }
+
   renderLogIn() {
     return (
       <LogIn
         button={this.logIn}
+        change={this.changeToSignUp}
+      />
+    );
+  }
+
+  renderSignUp() {
+    return (
+      <SignUp
+        button={this.logIn}
+        change={this.changeToLogIn}
       />
     );
   }
@@ -152,6 +180,9 @@ class App extends Component {
   renderPage() {
     if(this.state.page === "LogIn") {
       return this.renderLogIn();
+    }
+    if(this.state.page === "SignUp") {
+      return this.renderSignUp();
     }
     else if(this.state.page === "Home") {
       return this.renderHome();

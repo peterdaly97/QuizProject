@@ -1,28 +1,74 @@
 from flask import Flask, url_for, Response, request
 import pypyodbc
-import mysql.connector as mariadb
 import json
+from database_manager import DatabaseManager
+from passlib.hash import pbkdf2_sha256
 
 app = Flask(__name__)
 
-mariadb_connection = mariadb.connect(user='root', 
-                                    password='adminpasswd', 
-                                    database='quiztestdb')
+database_manager = DatabaseManager()
+settings = {
+	'debug':True	#includes autoreload
+}
 
-@app.route('/')
-def api_root():
-    return 'Welcome'
+@app.route('/SignUp', methods=['POST'])
+def api_SignUp():
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+
+    cursor.execute("SELECT password FROM Users WHERE username = %s;", (str(username),))
+    result = cursor.fetchall()
+
+    if len(result) > 0 :
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        accept = False
+    
+    else:
+        
+        pwdhash = pbkdf2_sha256.encrypt(password)
+        cursor.execute("Insert into users(username, password, highscore) values (%s, %s, 0);", (str(username), str(pwdhash),))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+        accept = True
+
+    return Response(
+        json.dumps(accept),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+    
 
 @app.route('/LogIn', methods=['POST'])
 def api_LogIn():
     #print(request.get_json()['score'])
     username = request.get_json()['username']
-    cursor = mariadb_connection.cursor(buffered=True) 
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
     cursor.execute("SELECT password FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
 
     password = request.get_json()['password']
-    if len(result) > 0 and result[0][0] == password :
+    
+    stored_password = result[0][0]+
+
+
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+   
+    if len(result) > 0 and pbkdf2_sha256.verify(password, stored_password) :
         accept = True
         return Response(
             json.dumps(accept),
@@ -48,20 +94,21 @@ def api_LogIn():
 def api_check_score():
     username = request.get_json()['username']
     #print(request.get_json()['score'])
-    cursor = mariadb_connection.cursor(buffered=True) 
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
     cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
     val = request.get_json()['score']
     if result[0][0] < val :
-        print("1")
         cursor.execute("UPDATE Users SET highscore = %s WHERE username = %s;", (str(val), str(username)))
-        
-        print("2")
-        mariadb_connection.commit()
-        print("3")
-        
+        connection.commit()
+
     cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
+
+    connection.commit()
+    cursor.close()
+    connection.close()
     return Response(
         json.dumps(result),
         mimetype='application/json',
@@ -76,7 +123,8 @@ def api_check_score():
 
 @app.route('/info', methods=['GET'])
 def api_info_points():
-    cursor = mariadb_connection.cursor(buffered=True) 
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
     cursor.execute("SELECT p.*, pf.* FROM info p INNER JOIN info_content pf ON pf.info_title_id = p.id")
     result = cursor.fetchall()
     
@@ -109,6 +157,10 @@ def api_info_points():
     
     result = wholeArray
 
+    connection.commit()
+    cursor.close()
+    connection.close()
+
     return Response(
         json.dumps(result),
         mimetype='application/json',
@@ -122,7 +174,8 @@ def api_info_points():
 
 @app.route('/quiz', methods=['GET'])
 def api_quiz():
-    cursor = mariadb_connection.cursor(buffered=True) 
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
     cursor.execute("SELECT p.*, pf.* FROM quiz_questions p INNER JOIN quiz_answers pf ON pf.quiz_question_id = p.id")
     result = cursor.fetchall()
 
@@ -158,6 +211,10 @@ def api_quiz():
       k += 1
     
     result = wholeArray
+
+    connection.commit()
+    cursor.close()
+    connection.close()
 
     return Response(
         json.dumps(result),

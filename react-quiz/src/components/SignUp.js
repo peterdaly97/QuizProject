@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 
-class LogIn extends  Component {
+class SignUp extends  Component {
 
     constructor() {
       super();
       this.state = {
         username: '',
         password: '',
-        failedLogIn: false
+        fail: false,
+        errorMessage: ''
       };
 
       this.handleUChange = this.handleUChange.bind(this);
       this.handlePChange = this.handlePChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
-      this.signUp = this.signUp.bind(this);
+      this.logIn = this.logIn.bind(this);
     }
 
     componentWillMount() {
@@ -21,7 +22,7 @@ class LogIn extends  Component {
     }
 
     async callApi() {
-        const accept = await fetch('/LogIn', {
+        const accept = await fetch('/SignUp', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -41,19 +42,35 @@ class LogIn extends  Component {
         }
         else {
             this.setState({
-                failedLogIn: true
+                fail: true,
+                errorMessage: "Username already taken"
               });
         }
     }
 
-    signUp(event) {
-      this.props.change();
-    }
+    logIn(event) {
+        this.props.change();
+      }
 
     handleSubmit(event) {
         event.preventDefault();
         
-        this.callApi();
+        if(this.state.username.length < 5) {
+            this.setState({
+                fail: true,
+                errorMessage: "Username must be 5 or more characters"
+            });
+        }
+        else if(this.state.password.length < 5) {
+            this.setState({
+                fail: true,
+                errorMessage: "Password must be 5 or more characters"
+            });
+        }
+        else {
+            this.callApi();
+        }
+        
         return false;
     }
 
@@ -68,7 +85,7 @@ class LogIn extends  Component {
     render() {
       return (
         <div>
-            { !this.state.failedLogIn && 
+            { !this.state.fail && 
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Username:  <br/>
@@ -80,11 +97,11 @@ class LogIn extends  Component {
                         <input className="LogIn" type="password" value={this.state.password} onChange={this.handlePChange} />
                     </label>
                     <br/>
-                    <a href='javascript:void(0)' onClick={this.signUp}>Sign Up</a>
-                    <input className="SubmitForm" type="submit" value="Log In" />
+                    <a href='javascript:void(0)' onClick={this.logIn}>Already have an account?</a>
+                    <input className="SubmitForm" type="submit" value="Submit" />
                 </form>
             }
-            { this.state.failedLogIn &&
+            { this.state.fail &&
                 <form onSubmit={this.handleSubmit}>
                 <label>
                     Username:  <br/>
@@ -96,14 +113,15 @@ class LogIn extends  Component {
                     <input className="LogIn fail" type="password" value={this.state.password} onChange={this.handlePChange} />
                 </label>
                 <br/>
-                <h5>Either your username or password was incorrect</h5>
-                <a href='javascript:void(0)' onClick={this.signUp}>Sign Up</a>
-                <input className="SubmitForm" type="submit" value="Log In" />
+                <h5>{this.state.errorMessage}</h5>
+                <a href='javascript:void(0)' onClick={this.logIn}>Already Have Account? Log In</a>
+                <input className="SubmitForm" type="submit" value="Submit" />
             </form>
+
             }
         </div>
       );
     }
   }
 
-  export default LogIn;
+  export default SignUp;
