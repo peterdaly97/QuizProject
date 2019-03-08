@@ -60,7 +60,7 @@ def api_LogIn():
 
     password = request.get_json()['password']
     
-    stored_password = result[0][0]+
+    stored_password = result[0][0]
 
 
 
