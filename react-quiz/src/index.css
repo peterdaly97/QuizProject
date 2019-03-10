@@ -343,3 +343,9 @@ h5 {
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
+
+.challenges {
+  border: 2px solid #1c73ff;
+  margin: 10%;
+  background: #c0c7d1;
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import InfoPoint from '../components/InfoPoint';
 import Option from '../components/Option';
-import Search from '../components/Search'
+import Search from '../components/Search';
 
 class Info extends Component {
 

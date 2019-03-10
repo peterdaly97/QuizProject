@@ -4,7 +4,8 @@ import Info from './components/Info';
 import Option from './components/Option';
 import logo from './svg/coeliacLogo.png';
 import LogIn from './components/LogIn';
-import SignUp from './components/SignUp'
+import SignUp from './components/SignUp';
+import SocialHub from './components/SocialHub';
 import './App.css';
 
 class App extends Component {
@@ -26,6 +27,7 @@ class App extends Component {
     this.changeToInfo = this.changeToInfo.bind(this);
     this.changeToSignUp = this.changeToSignUp.bind(this);
     this.changeToLogIn = this.changeToLogIn.bind(this);
+    this.changeToSocialHub = this.changeToSocialHub.bind(this);
 
     this.appendToInfo = this.appendToInfo.bind(this);
 
@@ -90,6 +92,23 @@ class App extends Component {
       );
   }
 
+  renderSocialHub() {
+    return (
+      <div>
+        <SocialHub
+          button={this.changeToHome}
+        />
+      </div>
+    )
+  }
+
+  changeToSocialHub(event) {
+    this.setState({ 
+      page: "SocialHub",
+      title: "Social Hub" 
+    });
+  }
+
   changeToHome(event) {
     this.setState({ 
       page: "Home",
@@ -151,10 +170,6 @@ class App extends Component {
     );
   }
 
-  renderQuizContent() {
-    return this.renderQuiz();
-  }
-
   renderInfoContent() {
     return (
       <Info
@@ -171,6 +186,8 @@ class App extends Component {
   renderHome() {
     return (
       <div>
+        <Option symbol="fa fa-address-book fa-3x" side="option top" change={this.changeToSocialHub}/>
+
         <Option name=" Quiz" symbol="fa fa-gamepad" side="option right" change={this.changeToQuiz}/>
         <Option name=" Info" symbol="fa fa-info" side="option left" change={this.changeToInfo}/>
       </div>
@@ -188,10 +205,13 @@ class App extends Component {
       return this.renderHome();
     }
     else if(this.state.page === "Quiz") {
-      return this.renderQuizContent();
+      return this.renderQuiz();
     }
     else if(this.state.page === "Info") {
       return this.renderInfoContent();
+    }
+    else if(this.state.page === "SocialHub") {
+      return this.renderSocialHub();
     }
   }
 
