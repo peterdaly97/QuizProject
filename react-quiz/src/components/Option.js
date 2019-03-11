@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
   Option.propTypes = {
     name: PropTypes.string,
     side: PropTypes.string.isRequired,
-    change: PropTypes.func.isRequired,
+    change: PropTypes.func,
     symbol: PropTypes.string
   };
 

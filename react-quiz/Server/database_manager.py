@@ -13,8 +13,8 @@ class DatabaseManager:
 	def createConnectionPool(self):
 		dbconfig = {
 		"user": "root",
-		"password":"adminpasswd",
-		"database":'quiztestdb'
+		"password":"ePBsjLQV",
+		"database":'desapi'
 		}
 
 		try:

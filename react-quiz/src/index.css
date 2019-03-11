@@ -173,7 +173,7 @@ h5 {
 .option {
 
 	border:2px solid #1978ab;
-	display:inline-block;
+	/*display:inline-block; */
 	cursor:pointer;
   text-align: center;
   text-shadow: 0.5px 0.5px black;
@@ -348,4 +348,26 @@ h5 {
   border: 2px solid #1c73ff;
   margin: 10%;
   background: #c0c7d1;
+}
+
+.challengeBox {
+  padding-right: 10px;
+  margin-right: 20px;
+}
+
+.challengeText {
+  text-align: left;
+}
+
+.challenge1 {
+  border-radius: 50px;
+  position: relative;
+  top: -52px;
+}
+
+.challenge2 {
+  border-radius: 50px;
+  position: relative;
+  float: right;
+  top: -100px;
 }

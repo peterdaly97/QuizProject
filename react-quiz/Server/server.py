@@ -60,7 +60,8 @@ def api_LogIn():
 
     password = request.get_json()['password']
     
-    stored_password = result[0][0]
+    if len(result) > 0 :
+        stored_password = result[0][0]
 
 
 
@@ -170,7 +171,30 @@ def api_info_points():
         }
     )
 
+@app.route('/get_challenges/<username>', methods=['GET'])
+def api_get_challenges(username):
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    cursor.execute("SELECT challenger FROM challenges WHERE challenged = %s;", (str(username),))
+    result = cursor.fetchall()
 
+    array = []
+
+    for i in result :
+        array.append(i)
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return Response(
+        json.dumps(array),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 @app.route('/quiz', methods=['GET'])
 def api_quiz():

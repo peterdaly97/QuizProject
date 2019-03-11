@@ -97,6 +97,7 @@ class App extends Component {
       <div>
         <SocialHub
           button={this.changeToHome}
+          username={this.state.username}
         />
       </div>
     )

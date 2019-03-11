@@ -16,13 +16,22 @@ class SocialHub extends Component {
     }
 
     componentWillMount() {
-        // Make api calls
+        this.callApi();
+    }
+
+    async callApi() {
+        const response = await fetch('/get_challenges/' + this.props.username);
+        this.challenges = await response.json();   
+
+        this.setState({
+            challenges : this.challenges
+        });  
     }
 
     renderChallenges(key) {
         return (
             <Challenge
-                username={key.username}
+                username={key}
             />
         );
     }
@@ -41,13 +50,13 @@ class SocialHub extends Component {
             <div>
                 <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
                 <div className="challenges">
-                    <h4>Challenges</h4>
+                    <h2>Challenges</h2>
                     <ul>
                         {this.state.challenges.map(this.renderChallenges)}
                     </ul>
                 </div>
                 <div className="challenges">
-                    <h4>Reports</h4>
+                    <h2>Reports</h2>
                     <ul>
                         {this.state.reports.map(this.renderReports)}
                     </ul>
