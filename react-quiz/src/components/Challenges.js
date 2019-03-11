@@ -5,11 +5,11 @@ import Option from './Option';
 function Challenge(props) {
 
     return (
-        <div className="challengeBox">
+        <div className="">
             <h4 className="challengeText">{props.username}</h4>
        
-            <Option symbol="fa fa-check fa-3x" side="option challenge1"/>
-            <Option symbol="fa fa-close fa-3x" side="option challenge2"/>
+            <Option symbol="fa fa-check fa-2x" side="option challenge1"/>
+            <Option symbol="fa fa-close fa-2x" side="option challenge2"/>
      
         </div>
     );

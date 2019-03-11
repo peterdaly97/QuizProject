@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
   function Option(props) {
     return (
-      <div>
+      <div className="optionBox">
         <button className={props.side} onClick={props.change}><i class={props.symbol}></i>{props.name}</button>
       </div>
     );

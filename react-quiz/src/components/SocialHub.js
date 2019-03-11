@@ -49,6 +49,7 @@ class SocialHub extends Component {
         return (
             <div>
                 <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
+                <Option  side="option challengeBTN" name="Issue Challenge"/>
                 <div className="challenges">
                     <h2>Challenges</h2>
                     <ul>

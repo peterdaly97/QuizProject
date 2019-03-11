@@ -346,7 +346,9 @@ h5 {
 
 .challenges {
   border: 2px solid #1c73ff;
-  margin: 10%;
+  margin-top: 17%;
+  margin-left: 10%; 
+  margin-right: 10%; 
   background: #c0c7d1;
 }
 
@@ -362,12 +364,29 @@ h5 {
 .challenge1 {
   border-radius: 50px;
   position: relative;
-  top: -52px;
+  top: -50px;
+  left: 350%;
+  margin-bottom: 30%;
+
 }
 
 .challenge2 {
   border-radius: 50px;
   position: relative;
   float: right;
-  top: -100px;
+  top: -50px;
+  left: 550%;
+}
+
+.optionBox {
+  position: absolute;
+}
+
+.challengeBTN {
+  font-size: 16px;
+  width: 50%;
+  height: 50px;
+  top: 16%;
+  background-color: #e8b102;
+  left: 25%;
 }
