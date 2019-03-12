@@ -18,7 +18,8 @@ class App extends Component {
      personalInfo: [],
      personalSave: [],
      title: "Log In",
-     username: ""
+     username: "",
+     challenge: false
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -28,6 +29,8 @@ class App extends Component {
     this.changeToSignUp = this.changeToSignUp.bind(this);
     this.changeToLogIn = this.changeToLogIn.bind(this);
     this.changeToSocialHub = this.changeToSocialHub.bind(this);
+
+    this.startChallenge = this.startChallenge.bind(this);
 
     this.appendToInfo = this.appendToInfo.bind(this);
 
@@ -86,10 +89,18 @@ class App extends Component {
               info={this.changeToInfo}
               append={this.appendToInfo}
               username={this.state.username}
+              challenge={this.state.challenge}
             />
           </div>
 
       );
+  }
+
+  startChallenge() {
+    this.setState({ 
+      challenge: true
+    });
+    this.changeToQuiz();
   }
 
   renderSocialHub() {
@@ -98,6 +109,7 @@ class App extends Component {
         <SocialHub
           button={this.changeToHome}
           username={this.state.username}
+          challengeBTN={this.startChallenge}
         />
       </div>
     )
@@ -113,7 +125,8 @@ class App extends Component {
   changeToHome(event) {
     this.setState({ 
       page: "Home",
-      title: "Home" 
+      title: "Home",
+      challenge: false
     });
   }
 
@@ -135,7 +148,8 @@ class App extends Component {
   changeToInfo(event) {
     this.setState({ 
       page: "Info",
-      title: "Information"
+      title: "Information",
+      challenge: false
     });
   }
 

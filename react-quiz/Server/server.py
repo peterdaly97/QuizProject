@@ -207,32 +207,35 @@ def api_quiz():
     quizCorrect = []
     quizCategory = []
     quizContent = []
+    quizId = []
 
     index = 0
     for i in result :
+        if i[0] not in quizId :
+            quizId.append(i[0])
 
-      if i[1] not in quizQuestions : 
-        quizQuestions.append(i[1])
-        quizCorrect.append(i[2])
-        quizCategory.append(i[3])
-        newContentArray = []
+        if i[1] not in quizQuestions : 
+            quizQuestions.append(i[1])
+            quizCorrect.append(i[2])
+            quizCategory.append(i[3])
+            newContentArray = []
 
-        j = index
-        while j < len(result) and i[0] == result[j][0] :
-            newContentArray.append(result[j][5])
-            j += 1
-          
-        
-        quizContent.append(newContentArray)
-      index += 1
+            j = index
+            while j < len(result) and i[0] == result[j][0] :
+                newContentArray.append(result[j][5])
+                j += 1
+            
+            
+            quizContent.append(newContentArray)
+        index += 1
     
     wholeArray = []
     k = 0
     while k < len(quizQuestions) :
-      object = {"question" : quizQuestions[k], "correct" : quizCorrect[k], "category" : quizCategory[k], "answers" : quizContent[k]}
+        object = {"id" : quizId[k], "question" : quizQuestions[k], "correct" : quizCorrect[k], "category" : quizCategory[k], "answers" : quizContent[k]}
 
-      wholeArray.append(object)
-      k += 1
+        wholeArray.append(object)
+        k += 1
     
     result = wholeArray
 
@@ -249,8 +252,40 @@ def api_quiz():
         }
     )
 
+@app.route('/post_challenge', methods=['POST'])
+def api_post_challenge():
+    challenger = request.get_json()['challenger']
+    questions = request.get_json()['questions']
+    challenged = request.get_json()['challenged']
+    score = request.get_json()['score']
 
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    cursor.execute("Insert into challenges(challenger, challenged, challengerScore, quiz_question1_id, \
+        quiz_question2_id, quiz_question3_id, quiz_question4_id, quiz_question5_id, \
+        quiz_question6_id, quiz_question7_id, quiz_question8_id, quiz_question9_id, \
+        quiz_question10_id, quiz_question11_id ,quiz_question12_id, quiz_question13_id, \
+        quiz_question14_id, quiz_question15_id) values (%s, %s, %s, %s, %s, %s, %s, %s, \
+        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (str(challenger), str(challenged), \
+        str(score), str(questions[0]["id"]), str(questions[1]["id"]),  str(questions[2]["id"]), \
+        str(questions[3]["id"]), str(questions[4]["id"]) ,  str(questions[5]["id"]),  str(questions[6]["id"]) \
+        , str(questions[7]["id"]),  str(questions[8]["id"]),  str(questions[9]["id"]),  str(questions[10]["id"]), \
+        str(questions[11]["id"]),  str(questions[12]["id"]),  str(questions[13]["id"]),  str(questions[14]["id"]) \
+        ,))
 
+    connection.commit()
+    cursor.close()
+    connection.close()
+    accept = True
+
+    return Response(
+        json.dumps(accept),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 if __name__ == '__main__':
     app.run()

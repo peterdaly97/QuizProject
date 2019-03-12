@@ -29,6 +29,7 @@ class Quiz extends Component {
       timer: 10,
       particles: false,
       score: 0
+      
      };
 
     this.renderAnswerOptions = this.renderAnswerOptions.bind(this);
@@ -45,6 +46,9 @@ class Quiz extends Component {
   }
 
   componentWillMount() {
+    this.setState({
+      challenge: this.props.challenge
+    });
     this.callApi();
   }
 
@@ -61,6 +65,26 @@ class Quiz extends Component {
       correct: this.quizReceived[0].correct,
       answerOptions: shuffledAnswerOptions[0]
     });
+  }
+
+
+  async sendChallenge() {
+    const response = await fetch('/post_challenge', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        questions: this.quizReceived,
+        challenger: this.props.username,
+        challenged: "tester",
+        score: this.state.score
+      })
+    });
+
+    this.scoreResponse = await response.json(); 
+    console.log(this.scoreResponse);
   }
 
   tick() {
@@ -103,8 +127,12 @@ class Quiz extends Component {
   }
 
   changeToResult() {
+    if(this.state.challenge) {
+      this.sendChallenge();
+    }
     this.setState((state) => ({
-      page: 'Result'
+      page: 'Result',
+      challenge: false
     }));
   }
 

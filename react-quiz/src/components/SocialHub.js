@@ -49,15 +49,15 @@ class SocialHub extends Component {
         return (
             <div>
                 <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
-                <Option  side="option challengeBTN" name="Issue Challenge"/>
+                <Option  side="option challengeBTN" name="Issue Challenge" change={this.props.challengeBTN}/>
                 <div className="challenges">
-                    <h2>Challenges</h2>
+                    <h2 className="SocialTitle">Challenges</h2>
                     <ul>
                         {this.state.challenges.map(this.renderChallenges)}
                     </ul>
                 </div>
                 <div className="challenges">
-                    <h2>Reports</h2>
+                    <h2 className="SocialTitle">Reports</h2>
                     <ul>
                         {this.state.reports.map(this.renderReports)}
                     </ul>
