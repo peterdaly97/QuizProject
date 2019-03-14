@@ -175,13 +175,50 @@ def api_info_points():
 def api_get_challenges(username):
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
-    cursor.execute("SELECT challenger FROM challenges WHERE challenged = %s;", (str(username),))
+    cursor.execute("SELECT challenger FROM challenges WHERE challenged = %s AND status = %s;", (str(username), "Not Completed",))
     result = cursor.fetchall()
 
     array = []
 
     for i in result :
         array.append(i)
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return Response(
+        json.dumps(array),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+@app.route('/get_reports/<username>', methods=['GET'])
+def api_get_reports(username):
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    
+    cursor.execute("SELECT challengerScore,challengedScore FROM challenges WHERE challenger = %s AND status = %s;", (str(username), "Completed",))
+    result = cursor.fetchall()
+
+    array = []
+
+    for i in result :
+
+        response = "Error"
+
+        if i[1] == -1 :
+            response = "Rejected!"
+        elif i[0] > i[1] :
+            response = "You Won!"
+        else :
+            response = "You Lost!"
+        
+        array.append(response)
+
 
     connection.commit()
     cursor.close()
@@ -259,19 +296,63 @@ def api_post_challenge():
     challenged = request.get_json()['challenged']
     score = request.get_json()['score']
 
+    questionIds = ""
+
+    for i in questions :
+        questionIds = questionIds + str(i["id"]) + ","
+
+
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
-    cursor.execute("Insert into challenges(challenger, challenged, challengerScore, quiz_question1_id, \
-        quiz_question2_id, quiz_question3_id, quiz_question4_id, quiz_question5_id, \
-        quiz_question6_id, quiz_question7_id, quiz_question8_id, quiz_question9_id, \
-        quiz_question10_id, quiz_question11_id ,quiz_question12_id, quiz_question13_id, \
-        quiz_question14_id, quiz_question15_id) values (%s, %s, %s, %s, %s, %s, %s, %s, \
-        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (str(challenger), str(challenged), \
-        str(score), str(questions[0]["id"]), str(questions[1]["id"]),  str(questions[2]["id"]), \
-        str(questions[3]["id"]), str(questions[4]["id"]) ,  str(questions[5]["id"]),  str(questions[6]["id"]) \
-        , str(questions[7]["id"]),  str(questions[8]["id"]),  str(questions[9]["id"]),  str(questions[10]["id"]), \
-        str(questions[11]["id"]),  str(questions[12]["id"]),  str(questions[13]["id"]),  str(questions[14]["id"]) \
-        ,))
+    cursor.execute("Insert into challenges(challenger, challenged, challengerScore, questions_ids) \
+        values (%s, %s, %s, %s);", (str(challenger), str(challenged), str(score), str(questionIds),))
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+    accept = True
+
+    return Response(
+        json.dumps(accept),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+# Needs to be updated to use ID's
+@app.route('/reject_challenge', methods=['POST'])
+def api_reject_challenge():
+    challenger = request.get_json()['challenger']
+
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    cursor.execute("UPDATE challenges SET status = %s WHERE challenger = %s;", ("Completed", str(challenger[0])))
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+    accept = True
+
+    return Response(
+        json.dumps(accept),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+# Needs to be updated to use ID's
+@app.route('/discard_report', methods=['POST'])
+def api_discard_report():
+    challenger = request.get_json()['challenger']
+
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+
+    cursor.execute("UPDATE challenges SET status = %s WHERE challenger = %s;", ("Discarded", str(challenger)))
 
     connection.commit()
     cursor.close()

@@ -13,9 +13,17 @@ class SocialHub extends Component {
             challenges: [],
             reports: []
         };
+
+        this.deleteChallenge = this.deleteChallenge.bind(this);
+        this.deleteReport = this.deleteReport.bind(this);
+        this.renderChallenges = this.renderChallenges.bind(this);
+        this.renderReports = this.renderReports.bind(this);
+
+        
     }
 
     componentWillMount() {
+        this.reportIndex = -1;
         this.callApi();
     }
 
@@ -26,21 +34,69 @@ class SocialHub extends Component {
         this.setState({
             challenges : this.challenges
         });  
+
+        const reportResponse = await fetch('/get_reports/' + this.props.username);
+        this.reports = await reportResponse.json();   
+
+        this.setState({
+            reports : this.reports
+        });  
+    }
+
+    deleteReport(index) {
+        this.deleteReport = -1;
+    }
+
+    deleteChallenge(username) {
+        
+        var array = []
+        array = this.state.challenges;
+        
+        for(var i = 0; i < array.length; i++) {
+            if(array[i] == username) {
+                array.splice(i, 1);
+                break;
+            }
+        }
+
+        this.setState({
+            challenges : array
+        });
+        this.delChallengeAPI(username)
+    }
+
+    async delChallengeAPI(username) {
+        
+        const response = await fetch('/reject_challenge', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              challenger: username
+            })
+          });
+        this.accepted = await response.json(); 
+        console.log(this.accepted);  
     }
 
     renderChallenges(key) {
         return (
             <Challenge
                 username={key}
+                deleteChallenge={this.deleteChallenge}
             />
         );
     }
 
     renderReports(key) {
+        this.reportIndex++;
         return (
             <Report
-                username={key.username}
-                result={key.result}
+                result={key}
+                index={this.reportIndex}
+                deleteReport={this.deleteReport}
             />
         );
     }

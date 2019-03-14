@@ -1,6 +1,6 @@
 -- MySQL dump 10.17  Distrib 10.3.12-MariaDB, for Win64 (AMD64)
 --
--- Host: localhost    Database: quiztestdb
+-- Host: localhost    Database: desapi
 -- ------------------------------------------------------
 -- Server version	10.3.12-MariaDB
 
@@ -16,12 +16,63 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `quiztestdb`
+-- Table structure for table `challenges`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `quiztestdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
+DROP TABLE IF EXISTS `challenges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `challenges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `challenger` varchar(255) NOT NULL,
+  `challenged` varchar(255) NOT NULL,
+  `status` varchar(100) NOT NULL DEFAULT 'Not Completed',
+  `challengerScore` int(11) DEFAULT -1,
+  `challengedScore` int(11) DEFAULT -1,
+  `questions_ids` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-USE `quiztestdb`;
+--
+-- Dumping data for table `challenges`
+--
+
+LOCK TABLES `challenges` WRITE;
+/*!40000 ALTER TABLE `challenges` DISABLE KEYS */;
+INSERT INTO `challenges` VALUES (14,'testing','tester','Completed',570,-1,'1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,'),(15,'testing','tester','Completed',100,200,'3,4,5,6,7,8,9,10,11,12,13,14,15,1,2');
+/*!40000 ALTER TABLE `challenges` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `diaryentry`
+--
+
+DROP TABLE IF EXISTS `diaryentry`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `diaryentry` (
+  `entry_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `meal` int(11) NOT NULL,
+  `image_path` varchar(1000) NOT NULL,
+  `entry_date` varchar(50) NOT NULL,
+  `time` time NOT NULL,
+  `iso_datetime` varchar(500) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`entry_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `diaryentry`
+--
+
+LOCK TABLES `diaryentry` WRITE;
+/*!40000 ALTER TABLE `diaryentry` DISABLE KEYS */;
+/*!40000 ALTER TABLE `diaryentry` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `info`
@@ -72,6 +123,31 @@ INSERT INTO `info_content` VALUES (1,'A person can become intolerant to gluten a
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ingredient`
+--
+
+DROP TABLE IF EXISTS `ingredient`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ingredient` (
+  `ingredient_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(500) NOT NULL,
+  `quantity` varchar(500) NOT NULL,
+  `recipe_id` int(11) NOT NULL,
+  PRIMARY KEY (`ingredient_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ingredient`
+--
+
+LOCK TABLES `ingredient` WRITE;
+/*!40000 ALTER TABLE `ingredient` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ingredient` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `quiz_answers`
 --
 
@@ -90,7 +166,9 @@ CREATE TABLE `quiz_answers` (
 --
 
 LOCK TABLES `quiz_answers` WRITE;
-INSERT INTO `quiz_answers` VALUES (1,'Antibiotics'),(1,'Snake Oil'),(1,'There is no cure'),(2,'Fever'),(2,'Indigestion'),(2,'Jaundice'),(3,'Bread'),(3,'Carrots'),(3,'Chicken'),(4,'1'),(4,'14'),(4,'Any Age'),(5,'Both are Equal'),(5,'Men'),(5,'Women'),(6,'No'),(6,'Yes'),(7,'Don\''t ingest gluten'),(7,'Stop eating'),(7,'Take exercise'),(8,'15%'),(8,'30%'),(8,'85%'),(9,'Early'),(9,'Late'),(9,'Rush Hour'),(10,'Both'),(10,'Clean Cooking Surface'),(10,'Clean Utensils'),(11,'Confirm your Order'),(11,'Forget your Order'),(11,'Go on their Break'),(12,'A Lifestyle'),(12,'A Virus'),(12,'An Autoimmune Disease'),(13,'Attacks Itself'),(13,'Gets Stronger'),(13,'Stops Working'),(14,'Influenza'),(14,'Measles'),(14,'Type 1 Diabetes');
+/*!40000 ALTER TABLE `quiz_answers` DISABLE KEYS */;
+INSERT INTO `quiz_answers` VALUES (1,'Antibiotics'),(1,'Snake Oil'),(1,'There is no cure'),(2,'Fever'),(2,'Indigestion'),(2,'Jaundice'),(3,'Bread'),(3,'Carrots'),(3,'Chicken'),(4,'1'),(4,'14'),(4,'Any Age'),(5,'Both are Equal'),(5,'Men'),(5,'Women'),(6,'No'),(6,'Yes'),(7,'Dont ingest gluten'),(7,'Stop eating'),(7,'Take exercise'),(8,'15%'),(8,'30%'),(8,'85%'),(9,'Early'),(9,'Late'),(9,'Rush Hour'),(10,'Both'),(10,'Clean Cooking Surface'),(10,'Clean Utensils'),(11,'Confirm your Order'),(11,'Forget your Order'),(11,'Go on their Break'),(12,'A Lifestyle'),(12,'A Virus'),(12,'An Autoimmune Disease'),(13,'Attacks Itself'),(13,'Gets Stronger'),(13,'Stops Working'),(14,'Influenza'),(14,'Measles'),(14,'Type 1 Diabetes'),(15,'Maybe'),(15,'No'),(15,'Yes');
+/*!40000 ALTER TABLE `quiz_answers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -106,7 +184,7 @@ CREATE TABLE `quiz_questions` (
   `correct` varchar(80) NOT NULL,
   `category` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,8 +193,65 @@ CREATE TABLE `quiz_questions` (
 
 LOCK TABLES `quiz_questions` WRITE;
 /*!40000 ALTER TABLE `quiz_questions` DISABLE KEYS */;
-INSERT INTO `quiz_questions` VALUES (1,'What is the cure for coeliac disease?','There is no cure','Getting Coeliac Disease'),(2,'Which of these is a sympton of gluten ingestion?','Indigestion','Symptoms'),(3,'Which of these foods contain gluten?','Bread','Foods To Avoid'),(4,'What age do you have to be to develop Coeliacs disease?','Any Age','Getting Coeliac Disease'),(5,'Which gender is more likely to develop Coeliacs disease?','Women','Health'),(6,'Do fruit and vegetables contain gluten?','No','Good Foods'),(7,'How does a Coeliac stop experiencing Coeliac symptoms','Dont ingest gluten','Good Foods'),(8,'If your identical twin has Coeliac Disease, what are the chances you\'ll get it?','85%','Genetics'),(9,'What is the worst time to go to a restaurant?','Rush Hour','Tips for Eating Out'),(10,'What needs to be clean when the chef prepares food?','Both','Tips for Eating Out'),(11,'What should you ask the waiter to do after they take your order?','Confirm your Order','Tips for Eating Out'),(12,'Coeliac Disease is...','An Autoimmune Disease','Coeliac as a Disease'),(13,'An autoimmune disease is when the body\'s immune system..','Attacks Itself','Coeliac as a Disease'),(14,'Which is another autoimmune disease?','Type 1 Diabetes','Coeliac as a Disease');
+INSERT INTO `quiz_questions` VALUES (1,'What is the cure for coeliac disease?','There is no cure','Getting Coeliac Disease'),(2,'Which of these is a sympton of gluten ingestion?','Indigestion','Symptoms'),(3,'Which of these foods contain gluten?','Bread','Foods To Avoid'),(4,'What age do you have to be to develop Coeliacs disease?','Any Age','Getting Coeliac Disease'),(5,'Which gender is more likely to develop Coeliacs disease?','Women','Health'),(6,'Do fruit and vegetables contain gluten?','No','Good Foods'),(7,'How does a Coeliac stop experiencing Coeliac symptoms','Dont ingest gluten','Good Foods'),(8,'If your identical twin has Coeliac Disease, what are the chances you\'ll get it?','85%','Genetics'),(9,'What is the worst time to go to a restaurant?','Rush Hour','Tips for Eating Out'),(10,'What needs to be clean when the chef prepares food?','Both','Tips for Eating Out'),(11,'What should you ask the waiter to do after they take your order?','Confirm your Order','Tips for Eating Out'),(12,'Coeliac Disease is...','An Autoimmune Disease','Coeliac as a Disease'),(13,'An autoimmune disease is when the body\'s immune system..','Attacks Itself','Coeliac as a Disease'),(14,'Which is another autoimmune disease?','Type 1 Diabetes','Coeliac as a Disease'),(15,'Did you enjoy this quiz?','Yes','Getting Coeliac Disease');
 /*!40000 ALTER TABLE `quiz_questions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `recipe`
+--
+
+DROP TABLE IF EXISTS `recipe`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `recipe` (
+  `recipe_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(500) NOT NULL,
+  `description` varchar(5000) NOT NULL,
+  `cooking_time_hrs` varchar(50) NOT NULL,
+  `cooking_time_min` varchar(50) NOT NULL,
+  `shared` tinyint(1) NOT NULL,
+  `meal` int(11) NOT NULL,
+  `date` varchar(50) NOT NULL,
+  `time` time NOT NULL,
+  `image_path` varchar(1000) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`recipe_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recipe`
+--
+
+LOCK TABLES `recipe` WRITE;
+/*!40000 ALTER TABLE `recipe` DISABLE KEYS */;
+/*!40000 ALTER TABLE `recipe` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `recipestep`
+--
+
+DROP TABLE IF EXISTS `recipestep`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `recipestep` (
+  `step_id` int(11) NOT NULL AUTO_INCREMENT,
+  `step_number` int(11) NOT NULL,
+  `content` varchar(1000) NOT NULL,
+  `recipe_id` int(11) NOT NULL,
+  PRIMARY KEY (`step_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recipestep`
+--
+
+LOCK TABLES `recipestep` WRITE;
+/*!40000 ALTER TABLE `recipestep` DISABLE KEYS */;
+/*!40000 ALTER TABLE `recipestep` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -127,9 +262,9 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `username` varchar(20) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `highscore` int(11) DEFAULT 0,
-  `password` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -140,7 +275,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('admin',730,'admin'),('peterDaly',720,'adminpasswd'),('testing',1100,'testing');
+INSERT INTO `users` VALUES ('tester',0,'$pbkdf2-sha256$29000$U.qdUwrh3DuHcG6tdW7t/Q$Sf3JUO55mh.L48Hq19ka7o2P2mQqRe84V6HoA0Pm1sU'),('testing',990,'$pbkdf2-sha256$29000$mfPeG8M4Z.xdC2FszZkTIg$tMAxFaUo7SV6/Nc7DrbaiO0Aal6QL6kPYK1jDVvj1eo');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -153,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-21 20:03:15
+-- Dump completed on 2019-03-14 15:12:52
