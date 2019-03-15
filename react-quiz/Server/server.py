@@ -3,6 +3,7 @@ import pypyodbc
 import json
 from database_manager import DatabaseManager
 from passlib.hash import pbkdf2_sha256
+from export_file import FileExporter
 
 app = Flask(__name__)
 
@@ -10,6 +11,10 @@ database_manager = DatabaseManager()
 settings = {
 	'debug':True	#includes autoreload
 }
+
+exporter = FileExporter()
+service = exporter.init()
+file_id='14PaKknXLogPAKaPBhqQsBLO8DohPpEufB1o2szCUCfw'
 
 @app.route('/SignUp', methods=['POST'])
 def api_SignUp():
@@ -123,44 +128,8 @@ def api_check_score():
 
 
 @app.route('/info', methods=['GET'])
-def api_info_points():
-    connection = database_manager.cnxpool.get_connection()
-    cursor = connection.cursor(buffered=True) 
-    cursor.execute("SELECT p.*, pf.* FROM info p INNER JOIN info_content pf ON pf.info_title_id = p.id")
-    result = cursor.fetchall()
-    
-    infoTitles = []
-    infoContent = []
-
-    index = 0
-    for i in result :
-
-      if i[1] not in infoTitles : 
-        infoTitles.append(i[1])
-        newContentArray = []
-
-        j = index
-        while j < len(result) and i[0] == result[j][0] :
-            newContentArray.append(result[j][3])
-            j += 1
-          
-        
-        infoContent.append(newContentArray)
-      index += 1
-    
-    wholeArray = []
-    k = 0
-    while k < len(infoTitles) :
-      object = {"title" : infoTitles[k], "content" : infoContent[k]}
-
-      wholeArray.append(object)
-      k += 1
-    
-    result = wholeArray
-
-    connection.commit()
-    cursor.close()
-    connection.close()
+def api_info_points():  
+    result = exporter.download_file(service, file_id, "text/plain","./")
 
     return Response(
         json.dumps(result),
