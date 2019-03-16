@@ -37,18 +37,22 @@ class FileExporter:
         cardContent = [] #Array to hold all info points
 
         for i in lineSplit:
-            if i[0] == "^":
-                if len(infoTitles) > 0:
-                    object = { 
-                        "title" : infoTitles,
-                        "content" : infoContent
-                    }
-                    cardContent.append(object)
-                infoTitles = []
-                infoContent = []
-                infoTitles.append(i[1:])
-            else:
-                infoContent.append(i)
+            if len(i) > 0 : 
+                if i[0] == "^":
+                    if len(infoTitles) > 0:
+                        object = { 
+                            "title" : infoTitles,
+                            "content" : infoContent
+                        }
+                        cardContent.append(object)
+                    infoTitles = []
+                    infoContent = []
+                    infoTitles.append(i[1:])
+                elif i[0] == "*":
+                    infoContent.append(i[1:])
+                else:
+                    if len(infoContent) > 0 :
+                        infoContent[-1:] = infoContent[-1:] + i
 
         object = { 
             "title" : infoTitles,
