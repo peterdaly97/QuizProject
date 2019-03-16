@@ -43,8 +43,37 @@ class SocialHub extends Component {
         });  
     }
 
-    deleteReport(index) {
-        this.deleteReport = -1;
+    deleteReport(id) {
+        var array = []
+        array = this.state.reports;
+        
+        for(var i = 0; i < array.length; i++) {
+            if(array[i].id == id) {
+                array.splice(i, 1);
+                break;
+            }
+        }
+
+        this.setState({
+            reports : array
+        });
+        this.delReportsAPI(id)
+    }
+
+    async delReportsAPI(id) {
+        
+        const response = await fetch('/discard_report', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: id
+            })
+          });
+        this.accepted = await response.json(); 
+        console.log(this.accepted);  
     }
 
     deleteChallenge(username) {
@@ -91,11 +120,11 @@ class SocialHub extends Component {
     }
 
     renderReports(key) {
-        this.reportIndex++;
         return (
             <Report
-                result={key}
-                index={this.reportIndex}
+                result={key.response}
+                id={key.id}
+                username={key.challenged}
                 deleteReport={this.deleteReport}
             />
         );

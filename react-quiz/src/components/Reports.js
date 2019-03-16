@@ -4,11 +4,15 @@ import Option from './Option';
 
 function Report(props) {
 
+    function deleteMe() {
+        props.deleteReport(props.id)
+    }
+
     return (
         <div className="">
-            <h4 className="challengeText">{props.result}</h4>
+            <h4 className="challengeText"><u>Name</u>: {props.username} &nbsp; <u>Result</u>: {props.result}</h4>
        
-            <Option symbol="fa fa-close fa-2x" side="option challenge2" change={props.deleteReport}/>
+            <Option symbol="fa fa-close fa-2x" side="option challenge2" change={deleteMe}/>
      
         </div>
     );
@@ -16,6 +20,7 @@ function Report(props) {
 
 Report.propTypes = {
     username: PropTypes.string,
+    id: PropTypes.number.isRequired,
     result: PropTypes.string.isRequired,
     deleteReport: PropTypes.func
 };

@@ -170,13 +170,13 @@ def api_get_reports(username):
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
     
-    cursor.execute("SELECT challengerScore,challengedScore FROM challenges WHERE challenger = %s AND status = %s;", (str(username), "Completed",))
+    cursor.execute("SELECT challengerScore,challengedScore,id, challenged FROM challenges WHERE challenger = %s AND status = %s;", (str(username), "Completed",))
     result = cursor.fetchall()
 
     array = []
 
     for i in result :
-
+        object = {}
         response = "Error"
 
         if i[1] == -1 :
@@ -185,8 +185,12 @@ def api_get_reports(username):
             response = "You Won!"
         else :
             response = "You Lost!"
-        
-        array.append(response)
+        object = { 
+            "id" : i[2],
+            "response" : response,
+            "challenged" : i[3]
+        }
+        array.append(object)
 
 
     connection.commit()
@@ -316,12 +320,12 @@ def api_reject_challenge():
 # Needs to be updated to use ID's
 @app.route('/discard_report', methods=['POST'])
 def api_discard_report():
-    challenger = request.get_json()['challenger']
+    id = request.get_json()['id']
 
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
 
-    cursor.execute("UPDATE challenges SET status = %s WHERE challenger = %s;", ("Discarded", str(challenger)))
+    cursor.execute("UPDATE challenges SET status = %s WHERE id = %s;", ("Discarded", str(id)))
 
     connection.commit()
     cursor.close()
