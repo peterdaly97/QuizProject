@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Question from '../components/Question';
 import QuestionCount from '../components/QuestionCount';
 import AnswerOption from '../components/AnswerOption';
@@ -57,9 +56,8 @@ class Quiz extends Component {
     this.quizReceived = await quizResponse.json(); 
 
     const shuffledAnswerOptions = this.quizReceived.map(
-      (question) => this.shuffleArray(this.quizReceived[0].answers)
+      (question) => this.shuffleArray(question.answers)
     );
-
     this.setState({
       question: this.quizReceived[0].question,
       correct: this.quizReceived[0].correct,
@@ -84,7 +82,6 @@ class Quiz extends Component {
     });
 
     this.scoreResponse = await response.json(); 
-    console.log(this.scoreResponse);
   }
 
   tick() {
@@ -105,7 +102,7 @@ class Quiz extends Component {
   shuffleArray(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
     // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
+    while (0 != currentIndex) {
       // Pick a remaining element...
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
@@ -140,7 +137,7 @@ class Quiz extends Component {
     this.setState((state) => ({
       answer: answer
     }));
-    if(answer === this.state.correct) {
+    if(answer == this.state.correct) {
       this.colour = this.correctColour;
       this.setState((state) => ({
         answersCount: state.answersCount + 1,
@@ -149,7 +146,6 @@ class Quiz extends Component {
     }
     else {
       this.colour = this.incorrectColour;
-      var array = this.state.personalInfo;
       var category = this.quizReceived[this.state.counter].category;
 
       this.props.append(category);

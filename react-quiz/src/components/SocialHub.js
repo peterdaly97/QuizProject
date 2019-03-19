@@ -16,10 +16,11 @@ class SocialHub extends Component {
             reports: [],
             searchName: '',
             errorMessage: '',
-            fail: false
+            fail: false,
+            questionArray: []
         };
 
-        this.deleteChallenge = this.deleteChallenge.bind(this);
+        this.reactToChallenge = this.reactToChallenge.bind(this);
         this.deleteReport = this.deleteReport.bind(this);
         this.renderChallenges = this.renderChallenges.bind(this);
         this.renderReports = this.renderReports.bind(this);
@@ -53,7 +54,7 @@ class SocialHub extends Component {
         array = this.state.reports;
         
         for(var i = 0; i < array.length; i++) {
-            if(array[i].id == id) {
+            if(array[i].id === id) {
                 array.splice(i, 1);
                 break;
             }
@@ -77,27 +78,46 @@ class SocialHub extends Component {
               id: id
             })
           });
-        this.accepted = await response.json(); 
-        console.log(this.accepted);  
     }
 
-    deleteChallenge(username) {
-        
+    reactToChallenge(username, accept) {
         var array = []
         array = this.state.challenges;
         
+        var selectedChallenge = {};
+        
         for(var i = 0; i < array.length; i++) {
-            if(array[i] == username) {
-                array.splice(i, 1);
-                break;
+            if(array[i].challenger === username) {
+                selectedChallenge = array[i].questions;
+                if(!accept) {
+                    array.splice(i, 1);
+                    break;
+                }
+                
             }
         }
 
         this.setState({
             challenges : array
         });
-        this.delChallengeAPI(username)
+
+        if(!accept) {
+            
+            this.delChallengeAPI(username);
+        }
+        else {
+            this.acceptChallengeAPI(selectedChallenge);
+        }
+        
     }
+
+    acceptChallengeAPI(selectedChallenge) {
+        var arrayOfQuestions = []
+
+        arrayOfQuestions = selectedChallenge.split(",").map(Number);
+        arrayOfQuestions.pop();
+        console.log(arrayOfQuestions);
+    } 
 
     async delChallengeAPI(username) {
         
@@ -111,14 +131,13 @@ class SocialHub extends Component {
               challenger: username
             })
           });
-        this.accepted = await response.json(); 
     }
 
     renderChallenges(key) {
         return (
             <Challenge
-                username={key}
-                deleteChallenge={this.deleteChallenge}
+                username={key.challenger}
+                deleteChallenge={this.reactToChallenge}
             />
         );
     }
@@ -141,9 +160,14 @@ class SocialHub extends Component {
     }
 
     async startChallenge() {
-        var errorMessage = ''
-        var fail = false;
-        if(this.state.searchName != this.props.username) {
+        if(this.state.searchName.length <= 0) {
+            this.setState({
+                errorMessage: "No user with that username",
+                fail: true
+            });
+        }
+        else if(this.state.searchName !== this.props.username) {
+            
             const response = await fetch('/check_username/' + this.state.searchName);
             this.userExists = await response.json(); 
             
@@ -152,20 +176,19 @@ class SocialHub extends Component {
                 
             }
             else {
-                errorMessage = "User doesn't exist";
-                fail = true;
+                this.setState({
+                    errorMessage: "No user with that username",
+                    fail: true
+                });
             }
         }
         else {
-            console.log("Hello");
-            errorMessage = "Can't challenge yourself";
-            fail = true;
+            this.setState({
+                errorMessage: "Can't challenge yourself",
+                fail: true
+            });
         }
         
-        this.setState({
-            errorMessage: errorMessage,
-            fail: fail
-        });
     }
 
     render() {

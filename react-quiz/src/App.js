@@ -20,7 +20,9 @@ class App extends Component {
      title: "Log In",
      username: "",
      challenge: false,
-     challengeName: ''
+     challenged: false,
+     challengeName: '',
+     challengedQs: []
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -43,12 +45,9 @@ class App extends Component {
   componentWillMount() {
     this.UserList();
     
-
     this.setState({
       page: "LogIn"
     });
-
-    
   }
 
   UserList() {
@@ -72,7 +71,8 @@ class App extends Component {
       this.savedPersonals.push(category);
       for (var j = 0; j < this.state.infoSaved.length; j++){
         var title = this.state.infoSaved[j].title;
-        if(title === category) {
+        
+        if(title == category) {
           array.push(this.state.infoSaved[j]);
           this.setState((state) => ({
             personalSave: array
@@ -91,10 +91,11 @@ class App extends Component {
               append={this.appendToInfo}
               username={this.state.username}
               challenge={this.state.challenge}
+              challenged={this.state.challenged}
               challengeName={this.state.challengeName}
+              challengedQuestions={this.state.challengedQs}
             />
           </div>
-
       );
   }
 
@@ -102,6 +103,14 @@ class App extends Component {
     this.setState({ 
       challenge: true,
       challengeName: name
+    });
+    this.changeToQuiz();
+  }
+
+  startChallenged(questions) {
+    this.setState({ 
+      challenged: true,
+      challengedQs: questions
     });
     this.changeToQuiz();
   }

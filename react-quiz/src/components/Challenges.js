@@ -4,16 +4,16 @@ import Option from './Option';
 
 function Challenge(props) {
 
-    function deleteMe() {
-        props.deleteChallenge(props.username)
+    function deleteMe(challenge) {
+        props.deleteChallenge(props.username, challenge)
     }
 
     return (
         <div className="">
             <h4 className="challengeText">{props.username}</h4>
        
-            <Option symbol="fa fa-check fa-2x" side="option challenge1"/>
-            <Option symbol="fa fa-close fa-2x" side="option challenge2" change={deleteMe}/>
+            <Option symbol="fa fa-check fa-2x" side="option challenge1" change ={() => {deleteMe(true)}}/>
+            <Option symbol="fa fa-close fa-2x" side="option challenge2" change= {() => {deleteMe(false)}}/>
      
         </div>
     );

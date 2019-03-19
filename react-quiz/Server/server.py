@@ -144,13 +144,15 @@ def api_info_points():
 def api_get_challenges(username):
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
-    cursor.execute("SELECT challenger FROM challenges WHERE challenged = %s AND status = %s;", (str(username), "Not Completed",))
+    cursor.execute("SELECT challenger, questions_ids FROM challenges WHERE challenged = %s AND status = %s;", (str(username), "Not Completed",))
     result = cursor.fetchall()
 
     array = []
+    object = {}
 
     for i in result :
-        array.append(i)
+        object = {"challenger" : i[0], "questions" : i[1]}
+        array.append(object)
 
     connection.commit()
     cursor.close()
@@ -325,24 +327,16 @@ def api_post_challenge():
 @app.route('/reject_challenge', methods=['POST'])
 def api_reject_challenge():
     challenger = request.get_json()['challenger']
-
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
-    cursor.execute("UPDATE challenges SET status = %s WHERE challenger = %s;", ("Completed", str(challenger[0])))
+    cursor.execute("UPDATE challenges SET status = %s WHERE challenger = %s;", ("Completed", str(challenger)))
 
     connection.commit()
     cursor.close()
     connection.close()
-    accept = True
 
-    return Response(
-        json.dumps(accept),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
-    )
+    return "Success"
+    
 
 # Needs to be updated to use ID's
 @app.route('/discard_report', methods=['POST'])
@@ -357,16 +351,8 @@ def api_discard_report():
     connection.commit()
     cursor.close()
     connection.close()
-    accept = True
 
-    return Response(
-        json.dumps(accept),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
-    )
+    return "Success"
 
 if __name__ == '__main__':
     app.run()
