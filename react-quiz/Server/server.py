@@ -165,6 +165,7 @@ def api_get_challenges(username):
         }
     )
 
+# Function for getting all reports belonging to a user, specified by username
 @app.route('/get_reports/<username>', methods=['GET'])
 def api_get_reports(username):
     connection = database_manager.cnxpool.get_connection()
@@ -199,6 +200,32 @@ def api_get_reports(username):
 
     return Response(
         json.dumps(array),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
+#Function for seeing if a user exists in the database, specified by username
+@app.route('/check_username/<username>', methods=['GET'])
+def api_check_username(username):
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    
+    cursor.execute("SELECT COUNT(*) FROM users WHERE username = %s;", (str(username),))
+    result = cursor.fetchall()
+    
+    exist = False
+    if result[0][0] > 0: 
+        exist = True
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return Response(
+        json.dumps(exist),
         mimetype='application/json',
         headers={
             'Cache-Control': 'no-cache',

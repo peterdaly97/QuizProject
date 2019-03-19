@@ -19,7 +19,8 @@ class App extends Component {
      personalSave: [],
      title: "Log In",
      username: "",
-     challenge: false
+     challenge: false,
+     challengeName: ''
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -90,15 +91,17 @@ class App extends Component {
               append={this.appendToInfo}
               username={this.state.username}
               challenge={this.state.challenge}
+              challengeName={this.state.challengeName}
             />
           </div>
 
       );
   }
 
-  startChallenge() {
+  startChallenge(name) {
     this.setState({ 
-      challenge: true
+      challenge: true,
+      challengeName: name
     });
     this.changeToQuiz();
   }

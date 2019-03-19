@@ -78,7 +78,7 @@ class Quiz extends Component {
       body: JSON.stringify({
         questions: this.quizReceived,
         challenger: this.props.username,
-        challenged: "tester",
+        challenged: this.props.challengeName,
         score: this.state.score
       })
     });

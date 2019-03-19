@@ -91,7 +91,7 @@ class Info extends Component {
         <div>
           <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
           <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
-          <Search onChange={this.search}/>
+          <Search onChange={this.search} class="infoSearch"/>
           <ul className="info">
             {this.state.info.map(this.renderInfoPoints)}
           </ul>
@@ -103,7 +103,7 @@ class Info extends Component {
         <div>
           <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
           <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
-          <Search onChange={this.search}/>
+          <Search onChange={this.search} class="infoSearch"/>
           <h4> This Info has been personalised for you </h4>
           <ul className="info">
             {this.state.personalInfo.map(this.renderInfoPoints)}

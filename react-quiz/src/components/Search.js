@@ -9,6 +9,7 @@ function Search(props) {
 
  return (
     <input
+      className={props.class}
       placeholder="Search for..."
       onChange={onChange}
     />
@@ -16,7 +17,8 @@ function Search(props) {
 }
 
 Search.propTypes = {
-  onChange : PropTypes.func.isRequired
+  onChange : PropTypes.func.isRequired,
+  class : PropTypes.string.isRequired
 };
 
 export default Search;
