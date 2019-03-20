@@ -375,14 +375,20 @@ def api_respond_to_challenge():
     else :
         challengeResult = "You won"
 
-    cursor.execute("UPDATE challenges SET status = %s, challengedScore = %s WHERE challenged = %s AND challenger = %s;", ("Completed", str(score), str(challenged), str(challenger),))
+    cursor.execute("UPDATE challenges SET status = %s, challengedScore = %s WHERE challenged = %s AND challenger = %s AND status = %s;", ("Completed", str(score), str(challenged), str(challenger), "Not Completed",))
 
     connection.commit()
     cursor.close()
     connection.close()
 
-    return challengeResult
-
+    return Response(
+        json.dumps(challengeResult),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 
 if __name__ == '__main__':

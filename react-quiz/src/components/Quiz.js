@@ -76,7 +76,6 @@ class Quiz extends Component {
       (question) => this.shuffleArray(question.answers)
     );
 
-    console.log(questions);
     this.setState({
       question: questions[0].question,
       correct: questions[0].correct,
@@ -117,8 +116,10 @@ class Quiz extends Component {
       })
     });
 
+    var result = await response.json();
+
     this.setState({
-      challengeResult: response
+      challengeResult: result
     });
   }
 
@@ -162,10 +163,10 @@ class Quiz extends Component {
   }
 
   changeToResult() {
-    if(this.state.challenge) {
+    if(this.state.challenge && this.state.page == 'Quiz') {
       this.sendChallenge();
     }
-    else if(this.props.challenged) {
+    else if(this.props.challenged && this.state.page == 'Quiz') {
       this.respondToChallenge();
     }
     this.setState((state) => ({

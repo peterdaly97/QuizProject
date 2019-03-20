@@ -96,6 +96,7 @@ class App extends Component {
               challenged={this.state.challenged}
               challengedQuestions={this.state.challengedQs}
               challenger={this.state.challenger}
+              challengeName={this.state.challengeName}
             />
           </div>
       );
