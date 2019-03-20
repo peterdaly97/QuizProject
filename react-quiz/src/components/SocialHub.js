@@ -229,15 +229,24 @@ class SocialHub extends Component {
                 </Popup>
                 <div className="challenges">
                     <h2 className="SocialTitle">Challenges</h2>
-                    <ul>
-                        {this.state.challenges.map(this.renderChallenges)}
-                    </ul>
+                    {this.state.challenges.length > 0 ? (
+                        <ul>
+                            {this.state.challenges.map(this.renderChallenges)}
+                        </ul>
+                        ) : (
+                        <h4>No challenges at the moment!</h4>
+                     )}
+                    
                 </div>
                 <div className="challenges">
                     <h2 className="SocialTitle">Reports</h2>
-                    <ul>
-                        {this.state.reports.map(this.renderReports)}
-                    </ul>
+                    {this.state.reports.length > 0 ? (
+                        <ul>
+                            {this.state.reports.map(this.renderReports)}
+                        </ul>
+                        ) : (
+                        <h4>No reports at the moment!</h4>
+                     )}
                 </div>
             </div>
         );
