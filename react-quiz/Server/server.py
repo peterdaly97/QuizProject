@@ -323,7 +323,8 @@ def api_post_challenge():
         }
     )
 
-# Needs to be updated to use ID's
+# API call for when user wwants to reject a challenge from someone
+# This will stop the challenge from appearing in the users challenge section
 @app.route('/reject_challenge', methods=['POST'])
 def api_reject_challenge():
     challenger = request.get_json()['challenger']
@@ -338,7 +339,8 @@ def api_reject_challenge():
     return "Success"
     
 
-# Needs to be updated to use ID's
+# API call for discarding report, this will set report to be read so now it will not appear
+# in the users report section
 @app.route('/discard_report', methods=['POST'])
 def api_discard_report():
     id = request.get_json()['id']
@@ -353,6 +355,35 @@ def api_discard_report():
     connection.close()
 
     return "Success"
+
+
+@app.route('/respond_to_challenge', methods=['POST'])
+def api_respond_to_challenge():
+    challenged = request.get_json()['challenged']
+    challenger = request.get_json()['challenger']
+    score = request.get_json()['score']
+
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+
+    challengeResult = ""
+    cursor.execute("SELECT challengerScore FROM challenges WHERE challenged = %s AND challenger = %s AND status = %s;", (str(challenged), str(challenger), "Not Completed",))
+    result = cursor.fetchall()
+
+    if result[0][0] > score :
+        challengeResult = "You lost"
+    else :
+        challengeResult = "You won"
+
+    cursor.execute("UPDATE challenges SET status = %s, challengedScore = %s WHERE challenged = %s AND challenger = %s;", ("Completed", str(score), str(challenged), str(challenger),))
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return challengeResult
+
+
 
 if __name__ == '__main__':
     app.run()

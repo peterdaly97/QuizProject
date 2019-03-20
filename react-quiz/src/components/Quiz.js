@@ -27,8 +27,8 @@ class Quiz extends Component {
       page: 'Confirm',
       timer: 10,
       particles: false,
-      score: 0
-      
+      score: 0,
+      challengeResult: ''
      };
 
     this.renderAnswerOptions = this.renderAnswerOptions.bind(this);
@@ -55,12 +55,31 @@ class Quiz extends Component {
     const quizResponse = await fetch('/quiz');
     this.quizReceived = await quizResponse.json(); 
 
-    const shuffledAnswerOptions = this.quizReceived.map(
+    var questions = [];
+
+    if(this.props.challenged) {
+
+      for(var i = 0; i < this.quizReceived.length; i++) {
+        for(var j = 0; j < this.props.challengedQuestions.length; j++) {
+          if(this.quizReceived[i].id == this.props.challengedQuestions[j]) {
+            
+            questions.push(this.quizReceived[i]);
+          }
+        }
+      }
+    }
+    else {
+      questions = this.quizReceived;
+    }
+
+    const shuffledAnswerOptions = questions.map(
       (question) => this.shuffleArray(question.answers)
     );
+
+    console.log(questions);
     this.setState({
-      question: this.quizReceived[0].question,
-      correct: this.quizReceived[0].correct,
+      question: questions[0].question,
+      correct: questions[0].correct,
       answerOptions: shuffledAnswerOptions[0]
     });
   }
@@ -82,6 +101,25 @@ class Quiz extends Component {
     });
 
     this.scoreResponse = await response.json(); 
+  }
+
+  async respondToChallenge() {
+    const response = await fetch('/respond_to_challenge', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        challenged: this.props.username,
+        challenger: this.props.challenger,
+        score: this.state.score
+      })
+    });
+
+    this.setState({
+      challengeResult: response
+    });
   }
 
   tick() {
@@ -126,6 +164,9 @@ class Quiz extends Component {
   changeToResult() {
     if(this.state.challenge) {
       this.sendChallenge();
+    }
+    else if(this.props.challenged) {
+      this.respondToChallenge();
     }
     this.setState((state) => ({
       page: 'Result',
@@ -269,6 +310,9 @@ class Quiz extends Component {
           button={this.props.button}
           info={this.props.info}
           username={this.props.username}
+          challenged={this.props.challenged}
+          challengeResult={this.state.challengeResult}
+          challenger={this.props.challenger}
           />
       );
     }

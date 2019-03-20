@@ -22,7 +22,8 @@ class App extends Component {
      challenge: false,
      challenged: false,
      challengeName: '',
-     challengedQs: []
+     challengedQs: [],
+     challenger: ''
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -34,6 +35,7 @@ class App extends Component {
     this.changeToSocialHub = this.changeToSocialHub.bind(this);
 
     this.startChallenge = this.startChallenge.bind(this);
+    this.startChallenged = this.startChallenged.bind(this);
 
     this.appendToInfo = this.appendToInfo.bind(this);
 
@@ -92,8 +94,8 @@ class App extends Component {
               username={this.state.username}
               challenge={this.state.challenge}
               challenged={this.state.challenged}
-              challengeName={this.state.challengeName}
               challengedQuestions={this.state.challengedQs}
+              challenger={this.state.challenger}
             />
           </div>
       );
@@ -107,8 +109,9 @@ class App extends Component {
     this.changeToQuiz();
   }
 
-  startChallenged(questions) {
+  startChallenged(challenger, questions) {
     this.setState({ 
+      challenger: challenger,
       challenged: true,
       challengedQs: questions
     });
@@ -122,6 +125,7 @@ class App extends Component {
           button={this.changeToHome}
           username={this.state.username}
           challengeBTN={this.startChallenge}
+          acceptChallenge={this.startChallenged}
         />
       </div>
     )

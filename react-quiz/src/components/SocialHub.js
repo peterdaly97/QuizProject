@@ -106,17 +106,18 @@ class SocialHub extends Component {
             this.delChallengeAPI(username);
         }
         else {
-            this.acceptChallengeAPI(selectedChallenge);
+            this.acceptChallenge(username, selectedChallenge);
         }
         
     }
 
-    acceptChallengeAPI(selectedChallenge) {
+    acceptChallenge(username, selectedChallenge) {
         var arrayOfQuestions = []
 
         arrayOfQuestions = selectedChallenge.split(",").map(Number);
         arrayOfQuestions.pop();
-        console.log(arrayOfQuestions);
+
+        this.props.acceptChallenge(username, arrayOfQuestions);
     } 
 
     async delChallengeAPI(username) {
