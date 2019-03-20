@@ -209,9 +209,10 @@ def api_get_reports(username):
         }
     )
 
-#Function for seeing if a user exists in the database, specified by username
-@app.route('/check_username/<username>', methods=['GET'])
-def api_check_username(username):
+#Function for seeing if a user exists in the database, specified by username.
+#Also checks if user has already been challenged by user trying to issue challenge
+@app.route('/check_username/<username>/challenged_by/<challenger>', methods=['GET'])
+def api_check_username(username, challenger):
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
     
@@ -222,12 +223,22 @@ def api_check_username(username):
     if result[0][0] > 0: 
         exist = True
 
+    message = ""
+
+    cursor.execute("SELECT COUNT(*) FROM challenges WHERE challenged = %s AND challenger = %s AND status = %s;", (str(username), str(challenger), "Not Completed",))
+    result = cursor.fetchall()
+
+    if result[0][0] > 0: 
+        message = "Can't challenge user twice!"
+
+    object = {"exist" : exist, "message" : message}
+
     connection.commit()
     cursor.close()
     connection.close()
 
     return Response(
-        json.dumps(exist),
+        json.dumps(object),
         mimetype='application/json',
         headers={
             'Cache-Control': 'no-cache',

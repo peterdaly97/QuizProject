@@ -169,10 +169,16 @@ class SocialHub extends Component {
         }
         else if(this.state.searchName !== this.props.username) {
             
-            const response = await fetch('/check_username/' + this.state.searchName);
+            const response = await fetch('/check_username/' + this.state.searchName + '/challenged_by/' + this.props.username);
             this.userExists = await response.json(); 
             
-            if(this.userExists) {
+            if(this.userExists.message.length > 0) {
+                this.setState({
+                    errorMessage: this.userExists.message,
+                    fail: true
+                });
+            }
+            else if(this.userExists.exist) {
                 this.props.challengeBTN(this.state.searchName);
                 
             }
