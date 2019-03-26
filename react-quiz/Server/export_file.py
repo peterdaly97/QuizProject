@@ -36,27 +36,56 @@ class FileExporter:
 
         cardContent = [] #Array to hold all info points
 
-        for i in lineSplit:
+        quizContent = {'question' : '', 'correct' : '', 'answers' : []} #Dictionary to hold all question data 
+        quizAnswers = [] #Array to hold all quiz answers
+        quizArray = [] #Array to hold all questions belonging to 1 info point
+
+        for i in lineSplit: #Loop through every line in Google Doc
             if len(i) > 0 : 
-                if i[0] == "^":
+                if i[0] == "^": #These if statements check first character in line
                     if len(infoTitles) > 0:
+                        if quizContent['question'] != '':
+                            quizArray.append(quizContent)
+                            quizContent = {'question' : '', 'correct' : '', 'answers' : []}
+
+                        #Create object for each info card
                         object = { 
                             "title" : infoTitles,
-                            "content" : infoContent
-                        }
-                        cardContent.append(object)
+                            "content" : infoContent,
+                            "quizContent" : quizArray
+                        } 
+                        cardContent.append(object) #Add info card to array of all info cards
+
+                    #Empty all arrays
                     infoTitles = []
                     infoContent = []
+                    quizArray = []
+
                     infoTitles.append(i[1:])
+
                 elif i[0] == "*":
                     infoContent.append(i[1:])
+                elif i[0] == "-":
+                    if quizContent['question'] != '':
+                        quizArray.append(quizContent)
+
+                    quizContent = {'question' : '', 'correct' : '', 'answers' : []}
+                    quizContent["question"] = i[1:]
+                    quizAnswers = []
+                elif i[0] == "=":
+                    quizContent["correct"] = i[1:]
+                elif i[0] == "#":
+                    quizAnswers.append(i[1:])
+                    quizContent['answers'] = quizAnswers
                 else:
                     if len(infoContent) > 0 :
                         infoContent[-1:] = infoContent[-1:] + i
 
+        quizArray.append(quizContent)
         object = { 
             "title" : infoTitles,
-            "content" : infoContent
+            "content" : infoContent,
+            "quizContent" : quizArray
         }
         cardContent.append(object)
         return cardContent

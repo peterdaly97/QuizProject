@@ -23,7 +23,8 @@ class App extends Component {
      challenged: false,
      challengeName: '',
      challengedQs: [],
-     challenger: ''
+     challenger: '',
+     quizQuestions: []
     };
 
     this.changeToHome = this.changeToHome.bind(this);
@@ -58,12 +59,35 @@ class App extends Component {
 
   async callApi() {
     const response = await fetch('/info');
-    this.infoReceived = await response.json();   
+    this.infoReceived = await response.json();  
 
+    var quizQuestions = []
+
+    var id = 1;
+    for(var i = 0; i < this.infoReceived.length; i++) {
+
+      for(var j = 0; j < this.infoReceived[i].quizContent.length; j++) {
+        
+        var object = {
+          "id" : id,
+          "question" : this.infoReceived[i].quizContent[j].question, 
+          "category" : this.infoReceived[i].title,
+          "correct" : this.infoReceived[i].quizContent[j].correct,
+          "answers" : this.infoReceived[i].quizContent[j].answers
+        }
+        quizQuestions.push(object);
+        id++;
+      }
+      
+    }
+  console.table(quizQuestions);
    this.setState({
       info : this.infoReceived,
-      infoSaved: this.infoReceived
-    });  
+      infoSaved: this.infoReceived,
+      quizQuestions: quizQuestions
+    }); 
+    
+    
   }
 
   appendToInfo(category) {
@@ -97,6 +121,7 @@ class App extends Component {
               challengedQuestions={this.state.challengedQs}
               challenger={this.state.challenger}
               challengeName={this.state.challengeName}
+              questions={this.state.quizQuestions}
             />
           </div>
       );

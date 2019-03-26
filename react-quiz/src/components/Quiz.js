@@ -52,8 +52,8 @@ class Quiz extends Component {
   }
 
   async callApi() {
-    const quizResponse = await fetch('/quiz');
-    this.quizReceived = await quizResponse.json(); 
+    
+    this.quizReceived = this.props.questions; 
 
     var questions = [];
 
