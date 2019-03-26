@@ -10,11 +10,22 @@ import Particle from '../components/Particles';
 
 import { CSSTransitionGroup } from 'react-transition-group';
 
+/**
+ * Quiz Component
+ * Handles updating all quiz screens
+ * Updates each question and then renders the next question once current question is complete
+ */
 class Quiz extends Component {
 
+  /**
+   * Constructor for the quiz class
+   * Called when a quiz object is initialised
+   */
   constructor() {
-    super();
 
+    super(); // Call super constructor for component
+
+    // Declare my state variables 
     this.state = {
       counter: 0,
       questionId: 1,
@@ -31,54 +42,68 @@ class Quiz extends Component {
       challengeResult: ''
      };
 
+    // Bind all neccesary function
     this.renderAnswerOptions = this.renderAnswerOptions.bind(this);
     this.returnToHome = this.returnToHome.bind(this);
     this.tick = this.tick.bind(this);
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
     this.changeToQuiz = this.changeToQuiz.bind(this);
 
+    // The different colours for the particles
     this.correctColour = {r:0, g:255, b:0, a:180};
     this.incorrectColour = {r:255, g:0, b:0, a:180};
     this.colour = this.correctColour;
 
-    this.quizReceived = [];
+    this.quizReceived = []; // An array to store all possible questions
+    this.questions = []; // An array to store the questions that will be on this quiz
   }
 
+  /**
+   * Called when component is re-rendered
+   */
   componentWillMount() {
     this.setState({
       challenge: this.props.challenge
     });
-    this.callApi();
+    this.setUpQuiz();
   }
 
-  async callApi() {
+  /**
+   * Sets up questions for the quiz
+   */
+  setUpQuiz() {
     
     this.quizReceived = this.props.questions; 
 
-    var questions = [];
-
+    // If this is a challenge quiz
     if(this.props.challenged) {
 
       for(var i = 0; i < this.quizReceived.length; i++) {
         for(var j = 0; j < this.props.challengedQuestions.length; j++) {
           if(this.quizReceived[i].id == this.props.challengedQuestions[j]) {
-            
-            questions.push(this.quizReceived[i]);
+            // Search for the questions that the user has been challenged to 
+            // and add them to the question array
+            this.questions.push(this.quizReceived[i]);
           }
         }
       }
     }
     else {
-      questions = this.quizReceived;
+      // Shuffle all questions
+      const shuffledQuestions = this.shuffleArray(this.quizReceived);
+
+      // Only take first 15 questions
+      this.questions = shuffledQuestions.slice(0, 15);
     }
 
-    const shuffledAnswerOptions = questions.map(
+    // Shuffle the answers to each question
+    const shuffledAnswerOptions = this.questions.map(
       (question) => this.shuffleArray(question.answers)
     );
 
     this.setState({
-      question: questions[0].question,
-      correct: questions[0].correct,
+      question: this.questions[0].question,
+      correct: this.questions[0].correct,
       answerOptions: shuffledAnswerOptions[0]
     });
   }
@@ -139,6 +164,7 @@ class Quiz extends Component {
   }
 
   shuffleArray(array) {
+
     var currentIndex = array.length, temporaryValue, randomIndex;
     // While there remain elements to shuffle...
     while (0 != currentIndex) {
@@ -188,7 +214,7 @@ class Quiz extends Component {
     }
     else {
       this.colour = this.incorrectColour;
-      var category = this.quizReceived[this.state.counter].category;
+      var category = this.questions[this.state.counter].category;
 
       this.props.append(category);
     }
@@ -200,9 +226,9 @@ class Quiz extends Component {
     this.setState({
       counter: counter,
       questionId: questionId,
-      question: this.quizReceived[counter].question,
-      correct: this.quizReceived[counter].correct,
-      answerOptions: this.quizReceived[counter].answers,
+      question: this.questions[counter].question,
+      correct: this.questions[counter].correct,
+      answerOptions: this.questions[counter].answers,
       answer: '',
       particles: false
     });
@@ -236,7 +262,7 @@ class Quiz extends Component {
   nextSet() {
     clearInterval(this.intervalHandle);
     this.intervalHandle = setInterval(this.tick, 1000);
-    if (this.state.questionId < this.quizReceived.length) {
+    if (this.state.questionId < this.questions.length) {
         setTimeout(() => this.setNextQuestion(), 300);
       } else {
         setTimeout(() => this.setResults(this.getResults()), 300);
@@ -292,7 +318,7 @@ class Quiz extends Component {
           >
             <div key={this.state.questionId}>
             <Timer time={this.state.timer}/>
-              <QuestionCount counter={this.state.questionId} total={this.quizReceived.length} />
+              <QuestionCount counter={this.state.questionId} total={this.questions.length} />
               <Question content={this.state.question}/>
       
               <ul className="answerOptions">

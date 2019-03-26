@@ -45,11 +45,7 @@ def api_SignUp():
 
     return Response(
         json.dumps(accept),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
     
@@ -68,9 +64,6 @@ def api_LogIn():
     if len(result) > 0 :
         stored_password = result[0][0]
 
-
-
-    connection.commit()
     cursor.close()
     connection.close()
    
@@ -78,21 +71,13 @@ def api_LogIn():
         accept = True
         return Response(
             json.dumps(accept),
-            mimetype='application/json',
-            headers={
-                'Cache-Control': 'no-cache',
-                'Access-Control-Allow-Origin': '*'
-            }
+            mimetype='application/json'
         )
     else :
         accept = False
         return Response(
             json.dumps(accept),
-            mimetype='application/json',
-            headers={
-                'Cache-Control': 'no-cache',
-                'Access-Control-Allow-Origin': '*'
-            }
+            mimetype='application/json'
         )
 
 
@@ -112,16 +97,11 @@ def api_check_score():
     cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
 
-    connection.commit()
     cursor.close()
     connection.close()
     return Response(
         json.dumps(result),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
 
@@ -133,11 +113,7 @@ def api_info_points():
 
     return Response(
         json.dumps(result),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
 @app.route('/get_challenges/<username>', methods=['GET'])
@@ -154,17 +130,12 @@ def api_get_challenges(username):
         object = {"challenger" : i[0], "questions" : i[1]}
         array.append(object)
 
-    connection.commit()
     cursor.close()
     connection.close()
 
     return Response(
         json.dumps(array),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
 # Function for getting all reports belonging to a user, specified by username
@@ -195,18 +166,12 @@ def api_get_reports(username):
         }
         array.append(object)
 
-
-    connection.commit()
     cursor.close()
     connection.close()
 
     return Response(
         json.dumps(array),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
 #Function for seeing if a user exists in the database, specified by username.
@@ -233,74 +198,14 @@ def api_check_username(username, challenger):
 
     object = {"exist" : exist, "message" : message}
 
-    connection.commit()
     cursor.close()
     connection.close()
 
     return Response(
         json.dumps(object),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
-@app.route('/quiz', methods=['GET'])
-def api_quiz():
-    connection = database_manager.cnxpool.get_connection()
-    cursor = connection.cursor(buffered=True) 
-    cursor.execute("SELECT p.*, pf.* FROM quiz_questions p INNER JOIN quiz_answers pf ON pf.quiz_question_id = p.id")
-    result = cursor.fetchall()
-
-    quizQuestions = []
-    quizCorrect = []
-    quizCategory = []
-    quizContent = []
-    quizId = []
-
-    index = 0
-    for i in result :
-        if i[0] not in quizId :
-            quizId.append(i[0])
-
-        if i[1] not in quizQuestions : 
-            quizQuestions.append(i[1])
-            quizCorrect.append(i[2])
-            quizCategory.append(i[3])
-            newContentArray = []
-
-            j = index
-            while j < len(result) and i[0] == result[j][0] :
-                newContentArray.append(result[j][5])
-                j += 1
-            
-            
-            quizContent.append(newContentArray)
-        index += 1
-    
-    wholeArray = []
-    k = 0
-    while k < len(quizQuestions) :
-        object = {"id" : quizId[k], "question" : quizQuestions[k], "correct" : quizCorrect[k], "category" : quizCategory[k], "answers" : quizContent[k]}
-
-        wholeArray.append(object)
-        k += 1
-    
-    result = wholeArray
-
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-    return Response(
-        json.dumps(result),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
-    )
 
 @app.route('/post_challenge', methods=['POST'])
 def api_post_challenge():
@@ -327,11 +232,7 @@ def api_post_challenge():
 
     return Response(
         json.dumps(accept),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
 # API call for when user wwants to reject a challenge from someone
@@ -394,11 +295,7 @@ def api_respond_to_challenge():
 
     return Response(
         json.dumps(challengeResult),
-        mimetype='application/json',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Access-Control-Allow-Origin': '*'
-        }
+        mimetype='application/json'
     )
 
 
