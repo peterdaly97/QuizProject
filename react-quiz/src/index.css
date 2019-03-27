@@ -226,6 +226,7 @@ h5 {
   height: 50px;
   left: 1%;
   font-size: 8px;
+  z-index : 5;
 }
 
 .switch {
@@ -235,6 +236,7 @@ h5 {
   height: 50px;
   right: 1%;
   font-size: 8px;
+  z-index : 5;
 }
 
 .left {

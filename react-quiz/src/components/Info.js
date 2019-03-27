@@ -16,7 +16,7 @@ class Info extends Component {
 
      this.switch = this.switch.bind(this);
      this.search = this.search.bind(this);
-
+     this.renderInfoPoints = this.renderInfoPoints.bind(this);
      
   }
 
@@ -70,6 +70,8 @@ class Info extends Component {
         key={key}
         title={key.title}
         content={key.content}
+        page={this.state.page}
+        deleteFunc={this.props.deleteFunc}
       />
     );
   }

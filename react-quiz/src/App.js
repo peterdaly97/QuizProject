@@ -41,6 +41,8 @@ class App extends Component {
     this.appendToInfo = this.appendToInfo.bind(this);
 
     this.logIn = this.logIn.bind(this);
+
+    this.deleteFromPersonalisedInfo = this.deleteFromPersonalisedInfo.bind(this);
   
     this.savedPersonals = [];
   }
@@ -94,10 +96,13 @@ class App extends Component {
   async getInfoPoint() {
     const response = await fetch('/get_personalised_points/' + this.state.username);
     this.infoReceived = await response.json(); 
-    var titles = this.infoReceived[0].split(",");
-    for(var i = 0; i < titles.length; i++) {
-      this.appendToInfo(titles[i], false);
+    if(this.infoReceived.length > 0) {
+      var titles = this.infoReceived[0].split(",");
+      for(var i = 0; i < titles.length; i++) {
+        this.appendToInfo(titles[i], false);
+      }
     }
+    
    
   }
 
@@ -118,7 +123,7 @@ class App extends Component {
   appendToInfo(category, newTitle) {
     
     var array = this.state.personalInfo;
-    console.log(category);
+
     if(!this.savedPersonals.includes(category)) {
       this.savedPersonals.push(category);
       for (var j = 0; j < this.state.infoSaved.length; j++){
@@ -135,6 +140,42 @@ class App extends Component {
         }
       }
     }
+  }
+
+  deleteFromPersonalisedInfo(title) {
+    
+    if(this.savedPersonals.includes(title)) {
+      var array = this.state.personalSave;
+      for (var j = 0; j < array.length; j++){
+        var category = array[j].title;
+        
+        if(title == category) {
+          
+          array.splice(j, 1);
+          this.setState((state) => ({
+            personalSave: array,
+            personalInfo: array
+          }));
+        }
+      }
+      this.deletePersonalInfoApi(title);
+    }
+
+    
+  }
+
+  async deletePersonalInfoApi(title) {
+    const response = await fetch('/remove_personalised_point', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: this.state.username,
+        title: title
+      })
+    });
   }
 
   renderQuiz() {
@@ -267,6 +308,7 @@ class App extends Component {
         personalSave={this.state.personalSave}
         button={this.changeToHome}
         searchFunc={this.search}
+        deleteFunc={this.deleteFromPersonalisedInfo}
       />
     );
   }

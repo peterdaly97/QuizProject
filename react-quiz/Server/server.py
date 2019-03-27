@@ -351,5 +351,40 @@ def api_get_points(username):
         mimetype='application/json'
     )
 
+#API call for deleting specific title from list of saved info points
+@app.route('/remove_personalised_point', methods=['POST'])
+def api_remove_point():
+    user = request.get_json()['user']
+    titleToRemove = request.get_json()['title']
+
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+
+    cursor.execute("SELECT title FROM personalisedpoints WHERE user = %s;", (str(user),))
+    result = cursor.fetchall()
+
+    if len(result) > 0:
+        titlesArray = result[0][0].split(',')
+        for i in titlesArray: 
+            if i == titleToRemove:
+                titlesArray.remove(i)
+        
+        newTitles = ''
+        for i in titlesArray:
+            if i != titlesArray[-1]:
+                newTitles = newTitles + i + ','
+        cursor.execute("Update personalisedpoints set title = %s  where user = %s;", (str(newTitles), str(user),))
+        connection.commit()
+
+    accepted = True
+
+    cursor.close()
+    connection.close()
+
+    return Response(
+        json.dumps(accepted),
+        mimetype='application/json'
+    )    
+
 if __name__ == '__main__':
     app.run()
