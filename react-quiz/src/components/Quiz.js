@@ -117,7 +117,7 @@ class Quiz extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        questions: this.quizReceived,
+        questions: this.questions,
         challenger: this.props.username,
         challenged: this.props.challengeName,
         score: this.state.score
@@ -216,7 +216,7 @@ class Quiz extends Component {
       this.colour = this.incorrectColour;
       var category = this.questions[this.state.counter].category;
 
-      this.props.append(category);
+      this.props.append(category[0], true);
     }
   }
 

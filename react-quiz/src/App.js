@@ -55,6 +55,7 @@ class App extends Component {
 
   UserList() {
     this.callApi();
+    
   }
 
   async callApi() {
@@ -80,25 +81,53 @@ class App extends Component {
       }
       
     }
-  console.table(quizQuestions);
-   this.setState({
-      info : this.infoReceived,
-      infoSaved: this.infoReceived,
-      quizQuestions: quizQuestions
+
+    this.setState({
+        info : this.infoReceived,
+        infoSaved: this.infoReceived,
+        quizQuestions: quizQuestions
     }); 
-    
+
     
   }
 
-  appendToInfo(category) {
-    var array = this.state.personalInfo;
+  async getInfoPoint() {
+    const response = await fetch('/get_personalised_points/' + this.state.username);
+    this.infoReceived = await response.json(); 
+    var titles = this.infoReceived[0].split(",");
+    for(var i = 0; i < titles.length; i++) {
+      this.appendToInfo(titles[i], false);
+    }
+   
+  }
 
+  async postInfoPoint(title) {
+    const response = await fetch('/post_personal_info', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: this.state.username,
+        title: title[0]
+      })
+    });
+  }
+
+  appendToInfo(category, newTitle) {
+    
+    var array = this.state.personalInfo;
+    console.log(category);
     if(!this.savedPersonals.includes(category)) {
       this.savedPersonals.push(category);
       for (var j = 0; j < this.state.infoSaved.length; j++){
         var title = this.state.infoSaved[j].title;
         
         if(title == category) {
+          if(newTitle) {
+            this.postInfoPoint(title);
+          }
           array.push(this.state.infoSaved[j]);
           this.setState((state) => ({
             personalSave: array
@@ -173,10 +202,12 @@ class App extends Component {
   }
 
   logIn(username) {
+    
     this.setState({ 
       page: "Home",
       username: username 
     });
+    this.getInfoPoint();
   }
 
   changeToQuiz(event) {

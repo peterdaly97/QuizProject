@@ -298,6 +298,58 @@ def api_respond_to_challenge():
         mimetype='application/json'
     )
 
+# API call to add personalised info point to database
+@app.route('/post_personal_info', methods=['POST'])
+def api_post_info_point():
+    user = request.get_json()['user']
+    title = request.get_json()['title']
+
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+
+    cursor.execute("SELECT title FROM personalisedpoints WHERE user = %s;", (str(user),))
+    result = cursor.fetchall()
+
+    newTitles = title + ','
+
+    if len(result) > 0:
+        newTitles = result[0][0] + title + ','
+        cursor.execute("Update personalisedpoints set title = %s where user = %s;", (str(newTitles), str(user),))
+    else :
+        cursor.execute("Insert into personalisedpoints(title, user) values (%s, %s);", (str(newTitles), str(user),))
+    
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    returnVal = "Accepted"
+
+    return Response(
+        json.dumps(returnVal),
+        mimetype='application/json'
+    )    
+
+#API call for getting all personal info points belonging to user 
+@app.route('/get_personalised_points/<username>', methods=['GET'])
+def api_get_points(username):
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    
+    cursor.execute("SELECT title FROM personalisedpoints WHERE user = %s;", (str(username),))
+    result = cursor.fetchall()
+    
+    info_headings = []
+    
+    if len(result) > 0:
+        info_headings = result[0]
+
+    cursor.close()
+    connection.close()
+
+    return Response(
+        json.dumps(info_headings),
+        mimetype='application/json'
+    )
 
 if __name__ == '__main__':
     app.run()

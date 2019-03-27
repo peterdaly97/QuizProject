@@ -74,6 +74,8 @@ class FileExporter:
                     quizAnswers = []
                 elif i[0] == "=":
                     quizContent["correct"] = i[1:]
+                    quizAnswers.append(i[1:])
+                    quizContent['answers'] = quizAnswers
                 elif i[0] == "#":
                     quizAnswers.append(i[1:])
                     quizContent['answers'] = quizAnswers
