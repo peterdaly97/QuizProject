@@ -93,6 +93,20 @@ class App extends Component {
     
   }
 
+  async updatePageCount(page, username) {
+    const response = await fetch('/update_page_count', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: username,
+        page: page
+      })
+    });
+  }
+
   async getInfoPoint() {
     const response = await fetch('/get_personalised_points/' + this.state.username);
     this.infoReceived = await response.json(); 
@@ -192,6 +206,7 @@ class App extends Component {
               challenger={this.state.challenger}
               challengeName={this.state.challengeName}
               questions={this.state.quizQuestions}
+              updateCount={this.updatePageCount}
             />
           </div>
       );
@@ -256,6 +271,8 @@ class App extends Component {
       page: "Quiz", 
       title: "Quiz"
     });
+
+    this.updatePageCount("quizAmount", this.state.username);
     this.intervalHandle = setInterval(this.tick, 1000);
   }
 
@@ -265,6 +282,7 @@ class App extends Component {
       title: "Information",
       challenge: false
     });
+    this.updatePageCount("infoAmount", this.state.username);
   }
 
   changeToLogIn(event) {
@@ -304,11 +322,13 @@ class App extends Component {
       <Info
         info={this.state.info}
         personalInfo={this.state.personalInfo}
+        username={this.state.username}
         infoSaved={this.state.infoSaved}
         personalSave={this.state.personalSave}
         button={this.changeToHome}
         searchFunc={this.search}
         deleteFunc={this.deleteFromPersonalisedInfo}
+        updateCount={this.updatePageCount}
       />
     );
   }

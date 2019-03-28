@@ -113,7 +113,7 @@ class FileExporter:
 
         data = fh.getvalue()
         string = data.decode("utf-8") 
-        
+
         info_points = self.format_data(string)
 
         return info_points

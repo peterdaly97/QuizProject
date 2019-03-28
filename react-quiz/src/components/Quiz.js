@@ -242,6 +242,7 @@ class Quiz extends Component {
   setResults (result) {
     this.setState({ result: result });
     this.changeToResult();
+    this.props.updateCount("resultAmount", this.props.username);
   }
 
   timeout() {

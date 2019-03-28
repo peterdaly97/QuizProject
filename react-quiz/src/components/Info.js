@@ -79,9 +79,11 @@ class Info extends Component {
   switch() {
     if(this.state.page === "Info") {
       this.setState({ page: "Personalised" });
+      this.props.updateCount("personalAmount", this.props.username)
     }
     else {
       this.setState({ page: "Info" });
+      this.props.updateCount("infoAmount", this.props.username)
     }
 
   }

@@ -384,7 +384,30 @@ def api_remove_point():
     return Response(
         json.dumps(accepted),
         mimetype='application/json'
-    )    
+    )   
+
+#API call for deleting specific title from list of saved info points
+@app.route('/update_page_count', methods=['POST'])
+def api_update_page_count():
+    user = request.get_json()['user']
+    page = request.get_json()['page']
+
+    connection = database_manager.cnxpool.get_connection()
+    cursor = connection.cursor(buffered=True) 
+    
+    #cursor.execute('Update users SET %s = %s + 1 WHERE username = %s;', (page, page, str(user),))
+    
+    connection.commit()
+
+    accepted = True
+
+    cursor.close()
+    connection.close()
+
+    return Response(
+        json.dumps(accepted),
+        mimetype='application/json'
+    )   
 
 if __name__ == '__main__':
     app.run()
