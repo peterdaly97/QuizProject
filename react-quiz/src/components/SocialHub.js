@@ -26,6 +26,7 @@ class SocialHub extends Component {
         this.renderReports = this.renderReports.bind(this);
         this.search = this.search.bind(this);
         this.startChallenge = this.startChallenge.bind(this);
+        this.leaveSocialHub = this.leaveSocialHub.bind(this);
     }
 
     componentWillMount() {
@@ -116,7 +117,7 @@ class SocialHub extends Component {
 
         arrayOfQuestions = selectedChallenge.split(",").map(Number);
         arrayOfQuestions.pop();
-
+        this.props.updateCount("Leave Social Hub", "Start Quiz", this.props.username);
         this.props.acceptChallenge(username, arrayOfQuestions);
     } 
 
@@ -179,6 +180,7 @@ class SocialHub extends Component {
                 });
             }
             else if(this.userExists.exist) {
+                this.props.updateCount("Leave Social Hub", "Start Quiz", this.props.username);
                 this.props.challengeBTN(this.state.searchName);
                 
             }
@@ -198,10 +200,14 @@ class SocialHub extends Component {
         
     }
 
+    leaveSocialHub() {
+        this.props.button("Leave Social Hub");
+    }
+
     render() {
         return (
             <div>
-                <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
+                <Option symbol="fa fa-home fa-3x" side="option top" change={this.leaveSocialHub}/>
                 <Popup trigger={<button className="option challengeBTN">Issue Challenge</button>} modal>
                     {close => (
                         <div className="modal">

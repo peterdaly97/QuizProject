@@ -37,7 +37,7 @@ class LogIn extends  Component {
         
         
         if(acceptJSON === true) {
-            this.props.button(this.state.username);
+            this.props.button("Log In", this.state.username);
         }
         else {
             this.setState({

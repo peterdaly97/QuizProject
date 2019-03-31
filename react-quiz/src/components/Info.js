@@ -17,6 +17,7 @@ class Info extends Component {
      this.switch = this.switch.bind(this);
      this.search = this.search.bind(this);
      this.renderInfoPoints = this.renderInfoPoints.bind(this);
+     this.returnHome = this.returnHome.bind(this);
      
   }
 
@@ -79,20 +80,30 @@ class Info extends Component {
   switch() {
     if(this.state.page === "Info") {
       this.setState({ page: "Personalised" });
-      this.props.updateCount("personalAmount", this.props.username)
+      this.props.updateCount("Leave Info Page", "Enter Personalised Page", this.props.username)
     }
     else {
       this.setState({ page: "Info" });
-      this.props.updateCount("infoAmount", this.props.username)
+      this.props.updateCount("Leave Personalised Page", "Enter Info Page", this.props.username)
     }
 
+  }
+
+  returnHome() {
+    if(this.state.page === "Info") {
+      this.props.button("Leave Info Page");
+    }
+    else {
+      this.props.button("Leave Personalised Page")
+    }
+    
   }
 
   render() {
     if(this.state.page === "Info") {
       return (
         <div>
-          <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
+          <Option symbol="fa fa-home fa-3x" side="option top" change={this.returnHome}/>
           <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
           <Search onChange={this.search} class="infoSearch"/>
           <ul className="info">
@@ -104,7 +115,7 @@ class Info extends Component {
     else {
       return (
         <div>
-          <Option symbol="fa fa-home fa-3x" side="option top" change={this.props.button}/>
+          <Option symbol="fa fa-home fa-3x" side="option top" change={this.returnHome}/>
           <Option symbol="fa fa-clone fa-3x" side="option switch" change={this.switch}/>
           <Search onChange={this.search} class="infoSearch"/>
           <h4> This Info has been personalised for you </h4>

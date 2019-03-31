@@ -206,6 +206,7 @@ h5 {
   right: 5%;
   font-size: 32px;
   color: white;
+  z-index: 10;
 }
 
 .bottom {

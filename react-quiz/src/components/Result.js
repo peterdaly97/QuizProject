@@ -9,6 +9,7 @@ import Option from '../components/Option';
       super();
 
       this.changeToInfo = this.changeToInfo.bind(this);
+      this.changeToHome = this.changeToHome.bind(this);
 
       this.state = {
         score: 0,
@@ -45,8 +46,11 @@ import Option from '../components/Option';
     }
 
     changeToInfo() {
-      this.props.button();
-      this.props.info();
+      this.props.info("Leave Result Page");
+    }
+
+    changeToHome() {
+      this.props.button("Leave Result Page");
     }
 
     render() {
@@ -70,7 +74,7 @@ import Option from '../components/Option';
               }
             </div>
           </CSSTransitionGroup>
-          <Option symbol="fa fa-home" name=" Home" side="option resultRight" change={this.props.button}/>
+          <Option symbol="fa fa-home" name=" Home" side="option resultRight" change={this.changeToHome}/>
           <Option symbol="fa fa-info" name=" Info" side="option resultLeft" change={this.changeToInfo}/>
         </div>
       );

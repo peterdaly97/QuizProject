@@ -189,12 +189,17 @@ class Quiz extends Component {
   }
 
   changeToResult() {
-    if(this.state.challenge && this.state.page == 'Quiz') {
-      this.sendChallenge();
+    if(this.state.page == 'Quiz') {
+      this.props.updateCount("Leave Quiz","Enter Result Page", this.props.username);
+
+      if(this.state.challenge && this.state.page == 'Quiz') {
+        this.sendChallenge();
+      }
+      else if(this.props.challenged && this.state.page == 'Quiz') {
+        this.respondToChallenge();
+      }
     }
-    else if(this.props.challenged && this.state.page == 'Quiz') {
-      this.respondToChallenge();
-    }
+    
     this.setState((state) => ({
       page: 'Result',
       challenge: false
@@ -242,7 +247,7 @@ class Quiz extends Component {
   setResults (result) {
     this.setState({ result: result });
     this.changeToResult();
-    this.props.updateCount("resultAmount", this.props.username);
+    
   }
 
   timeout() {
@@ -283,8 +288,8 @@ class Quiz extends Component {
     );
   }
 
-  returnToHome() {
-    this.props.button();
+  returnToHome(event) {
+    this.props.button("Leave Quiz");
   }
 
   render() {

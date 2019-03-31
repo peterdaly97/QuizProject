@@ -41,6 +41,7 @@ class App extends Component {
     this.appendToInfo = this.appendToInfo.bind(this);
 
     this.logIn = this.logIn.bind(this);
+    this.leaveHome = this.leaveHome.bind(this);
 
     this.deleteFromPersonalisedInfo = this.deleteFromPersonalisedInfo.bind(this);
   
@@ -93,8 +94,8 @@ class App extends Component {
     
   }
 
-  async updatePageCount(page, username) {
-    const response = await fetch('/update_page_count', {
+  async updatePageCount(event1, event2, username) {
+    const response = await fetch('/update_user_info', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -102,7 +103,8 @@ class App extends Component {
       },
       body: JSON.stringify({
         user: username,
-        page: page
+        event1: event1,
+        event2: event2
       })
     });
   }
@@ -217,6 +219,7 @@ class App extends Component {
       challenge: true,
       challengeName: name
     });
+    console.log(this.state.challenge);
     this.changeToQuiz();
   }
 
@@ -225,8 +228,9 @@ class App extends Component {
       challenger: challenger,
       challenged: true,
       challengedQs: questions
+    }, function () {
+      this.changeToQuiz();
     });
-    this.changeToQuiz();
   }
 
   renderSocialHub() {
@@ -237,6 +241,7 @@ class App extends Component {
           username={this.state.username}
           challengeBTN={this.startChallenge}
           acceptChallenge={this.startChallenged}
+          updateCount={this.updatePageCount}
         />
       </div>
     )
@@ -247,17 +252,20 @@ class App extends Component {
       page: "SocialHub",
       title: "Social Hub" 
     });
+    this.updatePageCount("Leave Home Page", "Enter Social Hub", this.state.username);
   }
 
-  changeToHome(event) {
+  changeToHome(messageEvent) {
     this.setState({ 
       page: "Home",
       title: "Home",
       challenge: false
     });
+
+    this.updatePageCount(messageEvent, "Enter Home Page", this.state.username);
   }
 
-  logIn(username) {
+  logIn(message, username) {
     
     this.setState({ 
       page: "Home",
@@ -271,18 +279,23 @@ class App extends Component {
       page: "Quiz", 
       title: "Quiz"
     });
-
-    this.updatePageCount("quizAmount", this.state.username);
+    
+    if(!this.state.challenge && !this.state.challenged) {
+      this.updatePageCount("Leave Home Page", "Start Quiz", this.state.username);
+    }
+    
     this.intervalHandle = setInterval(this.tick, 1000);
   }
 
-  changeToInfo(event) {
+  changeToInfo(messageEvent) {
+    
     this.setState({ 
       page: "Info",
       title: "Information",
       challenge: false
     });
-    this.updatePageCount("infoAmount", this.state.username);
+    console.log(this.state.page);
+    this.updatePageCount(messageEvent, "Enter Info Page ", this.state.username);
   }
 
   changeToLogIn(event) {
@@ -333,13 +346,17 @@ class App extends Component {
     );
   }
 
+  leaveHome(event) {
+    this.changeToInfo("Leave Home Page");
+  }
+
   renderHome() {
     return (
       <div>
         <Option symbol="fa fa-address-book fa-3x" side="option top" change={this.changeToSocialHub}/>
 
         <Option name=" Quiz" symbol="fa fa-gamepad" side="option right" change={this.changeToQuiz}/>
-        <Option name=" Info" symbol="fa fa-info" side="option left" change={this.changeToInfo}/>
+        <Option name=" Info" symbol="fa fa-info" side="option left" change={this.leaveHome}/>
       </div>
     );
   }

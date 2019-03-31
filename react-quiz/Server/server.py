@@ -4,6 +4,7 @@ import json
 from database_manager import DatabaseManager
 from passlib.hash import pbkdf2_sha256
 from export_file import FileExporter
+from datetime import datetime   
 
 app = Flask(__name__)
 
@@ -87,14 +88,16 @@ def api_check_score():
     #print(request.get_json()['score'])
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
-    cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
+    cursor.execute("SELECT highscore FROM users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
     val = request.get_json()['score']
-    if result[0][0] < val :
-        cursor.execute("UPDATE Users SET highscore = %s WHERE username = %s;", (str(val), str(username)))
-        connection.commit()
 
-    cursor.execute("SELECT highscore FROM Users WHERE username = %s;", (str(username),))
+    if len(result) > 0:
+        if result[0][0] < val :
+            cursor.execute("UPDATE users SET highscore = %s WHERE username = %s;", (str(val), str(username)))
+            connection.commit()
+
+    cursor.execute("SELECT highscore FROM users WHERE username = %s;", (str(username),))
     result = cursor.fetchall()
 
     cursor.close()
@@ -387,18 +390,26 @@ def api_remove_point():
     )   
 
 #API call for deleting specific title from list of saved info points
-@app.route('/update_page_count', methods=['POST'])
+@app.route('/update_user_info', methods=['POST'])
 def api_update_page_count():
     user = request.get_json()['user']
-    page = request.get_json()['page']
+    evt1 = request.get_json()['event1']
+    evt2 = request.get_json()['event2']
 
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
-    
-    #cursor.execute('Update users SET %s = %s + 1 WHERE username = %s;', (page, page, str(user),))
-    
-    connection.commit()
 
+    cursor.execute("SELECT id FROM Users WHERE username = %s;", (str(user),))
+    result = cursor.fetchall()
+
+    if len(result) > 0:
+        dateTimeObj = datetime.now()     
+        timestampStr = dateTimeObj.strftime('%Y-%m-%d %H:%M:%S')
+
+        cursor.execute('Insert into userdata(userid, event, timestamp) values (%s, %s, %s), (%s, %s, %s);', \
+            (str(result[0][0]), str(evt1), timestampStr, str(result[0][0]), str(evt2), timestampStr,))
+        connection.commit()
+    
     accepted = True
 
     cursor.close()
