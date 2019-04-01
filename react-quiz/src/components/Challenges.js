@@ -2,9 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Option from './Option';
 
+/**
+ * Challenge component
+ * @param {*} props 
+ */
 function Challenge(props) {
 
+    /**
+     * Function called when user reacts to challenege
+     * challenge is true when challenge is accepted
+     * challenge is false when challenge is rejected
+     * @param {*} challenge 
+     */
     function deleteMe(challenge) {
+        // Calls function in socialhub.js 
         props.deleteChallenge(props.username, challenge)
     }
 
@@ -19,6 +30,8 @@ function Challenge(props) {
     );
 }
 
+// Takes in username of person who issued challenge
+// Takes in function for reacting to challenge
 Challenge.propTypes = {
     username: PropTypes.string.isRequired,
     deleteChallenge: PropTypes.func

@@ -21,6 +21,8 @@ except ImportError:
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
+# Our file explorer class, this downloads all data from our Google Doc
+# It also formats all this data and returns it wrapped in a JSON object
 class FileExporter:
 
     #Function to format all the data stored in the google doc
@@ -63,20 +65,20 @@ class FileExporter:
 
                     infoTitles.append(i[1:])
 
-                elif i[0] == "*":
+                elif i[0] == "*": # Looking for bullet point belonging to info card
                     infoContent.append(i[1:])
-                elif i[0] == "-":
+                elif i[0] == "-": # Looking for a quiz question
                     if quizContent['question'] != '':
                         quizArray.append(quizContent)
 
                     quizContent = {'question' : '', 'correct' : '', 'answers' : []}
                     quizContent["question"] = i[1:]
                     quizAnswers = []
-                elif i[0] == "=":
+                elif i[0] == "=": # Looking for correct answer to quiz question
                     quizContent["correct"] = i[1:]
                     quizAnswers.append(i[1:])
                     quizContent['answers'] = quizAnswers
-                elif i[0] == "#":
+                elif i[0] == "#": # Looking for incorrect answer to quiz question
                     quizAnswers.append(i[1:])
                     quizContent['answers'] = quizAnswers
                 else:
@@ -84,6 +86,9 @@ class FileExporter:
                         infoContent[-1:] = infoContent[-1:] + i
 
         quizArray.append(quizContent)
+
+        # Format is that each object is an info card, which has a title and a set of bullet points
+        # Each info card also has each question associated with it
         object = { 
             "title" : infoTitles,
             "content" : infoContent,
@@ -92,6 +97,7 @@ class FileExporter:
         cardContent.append(object)
         return cardContent
     
+    # Function for accessing Google Doc and downloading all data stored in it
     def download_file(self,service,file_id,mime_type,filepath):
         """Downloads files belonging to a folder (ignores subfolders).
         Args:
@@ -119,7 +125,8 @@ class FileExporter:
         return info_points
             
 
-   
+    # Function to initialise the file exporter
+    # Sets up access to the Google Doc
     def init(self):
         SERVICE_ACCOUNT_KEY = 'desqol-d6756a6f656c.json'
 

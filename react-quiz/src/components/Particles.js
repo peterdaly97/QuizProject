@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import Particles from 'react-particles-js';
 
 
-
+/**
+ * Particle component
+ * Displays particles to the screen
+ * @param {*} props 
+ */
 function Particle(props) {
   var particleConfig = {
     "particles": {
@@ -125,6 +129,7 @@ function Particle(props) {
   )
 }
 
+// Takes in how may particles should be created, their speed, radius and colour
 Particle.propTypes = {
   particleAmount : PropTypes.number.isRequired,
   particleSpeed : PropTypes.number.isRequired,

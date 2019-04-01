@@ -2,12 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Option from './Option';
 
+/**
+ * Reports component
+ * Formats and renders report
+ * @param {*} props 
+ */
 function Report(props) {
 
+    /**
+     * Function called when user selects discard button on report
+     */
     function deleteMe() {
         props.deleteReport(props.id)
     }
 
+    /**
+     * Returns formatted report
+     */
     return (
         <div className="">
             <h4 className="challengeText"><u>Name</u>: {props.username} &nbsp; <u>Result</u>: {props.result}</h4>
@@ -18,6 +29,8 @@ function Report(props) {
     );
 }
 
+// Takes username of challenged user, id of report,
+// Result of challenge and function for when report is discarded
 Report.propTypes = {
     username: PropTypes.string,
     id: PropTypes.number.isRequired,
