@@ -389,12 +389,14 @@ def api_post_info_point():
     cursor.execute("SELECT title FROM personalisedpoints WHERE user = %s;", (str(user),)) # Execute select statement
     result = cursor.fetchall() # Store result of this statement
 
+    newTitles = ''
     newTitle = title + ',' # Adds comma to end of title so that it keeps with the format for storing info point titles
 
     if len(result) > 0: # If user alreadys has some info points saved
         newTitles = result[0][0] + newTitle # Adds new title on to the end of the stored title 
         cursor.execute("Update personalisedpoints set title = %s where user = %s;", (str(newTitles), str(user),)) # Execute update statement
     else : # User doesn't have any info points saved yet
+        newTitles = newTitle
         cursor.execute("Insert into personalisedpoints(title, user) values (%s, %s);", (str(newTitles), str(user),)) # Execute Insert statement
     
     # Close connection
