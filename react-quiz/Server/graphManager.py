@@ -21,10 +21,15 @@ result = cursor.fetchall() # Store result of this statement
 
 finishQuizAmount = result[0][0] # Assign amount of result page visits to variable
 
+cursor.execute("SELECT COUNT(*) FROM userdata WHERE event = 'Enter Info Page';") # Execute select statement
+result = cursor.fetchall() # Store result of this statement
+
+infoAmount = result[0][0] # Assign amount of result page visits to variable
+
 # Set up bar chart variables
-objects = ('Start Quiz', 'Finish Quiz')
+objects = ('Quiz', 'Results Page', 'Info Page')
 y_pos = np.arange(len(objects))
-performance = [startQuizAmount, finishQuizAmount]
+performance = [startQuizAmount, finishQuizAmount, infoAmount]
  
  # Set up bar chart
 plt.bar(y_pos, performance, align='center', alpha=0.5)
