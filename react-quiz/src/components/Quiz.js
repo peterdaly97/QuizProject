@@ -279,6 +279,9 @@ class Quiz extends Component {
     const counter = this.state.counter + 1;
     const questionId = this.state.questionId + 1;
 
+    
+    this.props.updateCount("Finish question " + (counter - 1),"Start question " + counter, this.props.username);
+
     // Assign all question values to be the next questions values
     // Also turns particles off
     this.setState({

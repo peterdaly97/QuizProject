@@ -53,6 +53,7 @@ class App extends Component {
     this.logIn = this.logIn.bind(this);
     this.leaveHome = this.leaveHome.bind(this);
     this.deleteFromPersonalisedInfo = this.deleteFromPersonalisedInfo.bind(this);
+    this.updatePageCount = this.updatePageCount.bind(this);
   
     this.savedPersonals = []; // Array to store all personal points that have been saved
   }
