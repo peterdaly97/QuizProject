@@ -58,7 +58,7 @@ class SignUp extends  Component {
         
         if(acceptJSON === true) {
             // If sign up was successful, log user in
-            this.props.button(this.state.username);
+            this.props.button("", this.state.username);
         }
         else {
             // Sign up wasn't successful

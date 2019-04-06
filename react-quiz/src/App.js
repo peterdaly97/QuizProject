@@ -355,7 +355,6 @@ class App extends Component {
    * Function for when the user has successfully logged in
    */
   logIn(message, username) {
-    
     // Sets the home page to be current page
     this.setState({ 
       page: "Home",
