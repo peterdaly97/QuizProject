@@ -33,7 +33,7 @@ def api_SignUp():
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
 
-    cursor.execute("SELECT password FROM Users WHERE username = %s;", (str(username),)) # Execute select statement
+    cursor.execute("SELECT password FROM users WHERE username = %s;", (str(username),)) # Execute select statement
     result = cursor.fetchall() # Store result of this statement
 
     if len(result) > 0 :
@@ -74,7 +74,7 @@ def api_LogIn():
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
 
-    cursor.execute("SELECT password FROM Users WHERE username = %s;", (str(username),)) # Execute select statement
+    cursor.execute("SELECT password FROM users WHERE username = %s;", (str(username),)) # Execute select statement
     result = cursor.fetchall() # Store result of this statement
 
     if len(result) > 0 :
@@ -487,7 +487,7 @@ def api_update_page_count():
     connection = database_manager.cnxpool.get_connection()
     cursor = connection.cursor(buffered=True) 
 
-    cursor.execute("SELECT id FROM Users WHERE username = %s;", (str(user),)) # Execute select statement
+    cursor.execute("SELECT id FROM users WHERE username = %s;", (str(user),)) # Execute select statement
     result = cursor.fetchall() # Store result of this statement
 
     if len(result) > 0:
