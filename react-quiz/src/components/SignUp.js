@@ -26,6 +26,7 @@ class SignUp extends  Component {
         this.handlePChange = this.handlePChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.logIn = this.logIn.bind(this);
+        this.baseUrl = "http://jira.itcarlow.ie/desqol/quiz";
     }
 
     /**
@@ -41,7 +42,7 @@ class SignUp extends  Component {
     async callApi() {
 
         // Pass username and password that the user wishes to have as their log in details
-        const accept = await fetch('/SignUp', {
+        const accept = await fetch(this.baseUrl+'/signup', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',

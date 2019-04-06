@@ -40,6 +40,7 @@ class SocialHub extends Component {
         this.search = this.search.bind(this);
         this.startChallenge = this.startChallenge.bind(this);
         this.leaveSocialHub = this.leaveSocialHub.bind(this);
+        this.baseUrl = "http://jira.itcarlow.ie/desqol/quiz";
     }
 
     /**
@@ -58,7 +59,7 @@ class SocialHub extends Component {
      */
     async callApi() {
         // API call to get challenges
-        const response = await fetch('/get_challenges/' + this.props.username);
+        const response = await fetch(this.baseUrl+'/get_challenges/' + this.props.username);
         this.challenges = await response.json();   
 
         this.setState({ // Stores challenges in state variable
@@ -66,7 +67,7 @@ class SocialHub extends Component {
         });  
 
         // API call to get reports
-        const reportResponse = await fetch('/get_reports/' + this.props.username);
+        const reportResponse = await fetch(this.baseUrl+'/get_reports/' + this.props.username);
         this.reports = await reportResponse.json();   
 
         this.setState({ // Stores reports in state variable
@@ -105,7 +106,7 @@ class SocialHub extends Component {
      */
     async delReportsAPI(id) {
         // Passes id of report to be deleted
-        const response = await fetch('/discard_report', {
+        const response = await fetch(this.baseUrl+'/discard_report', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -177,7 +178,7 @@ class SocialHub extends Component {
      */
     async delChallengeAPI(username) {
         
-        const response = await fetch('/reject_challenge', {
+        const response = await fetch(this.baseUrl+'/reject_challenge', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -247,7 +248,7 @@ class SocialHub extends Component {
             // If user isn't trying to challenge themselves
             
             // API call to check if username is in database
-            const response = await fetch('/check_username/' + this.state.searchName + '/challenged_by/' + this.props.username);
+            const response = await fetch(this.baseUrl+'/check_username/' + this.state.searchName + '/challenged_by/' + this.props.username);
             this.userExists = await response.json(); 
             
             if(this.userExists.message.length > 0) {

@@ -56,6 +56,8 @@ class App extends Component {
     this.updatePageCount = this.updatePageCount.bind(this);
   
     this.savedPersonals = []; // Array to store all personal points that have been saved
+  
+    this.baseUrl = "http://jira.itcarlow.ie/desqol/quiz";
   }
 
   /**
@@ -77,7 +79,7 @@ class App extends Component {
    */
   async callApi() {
     // Makes api call
-    const response = await fetch('/info');
+    const response = await fetch(this.baseUrl+'/info');
     this.infoReceived = await response.json();  // Gets data back from call
 
     var quizQuestions = [] // Array to hold all quiz data
@@ -121,7 +123,7 @@ class App extends Component {
 
     // Event1 is the user leaving their current page
     // Event2 is the user entering the new page
-    const response = await fetch('/update_user_info', {
+    const response = await fetch(this.baseUrl+'/update_user_info', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -140,7 +142,7 @@ class App extends Component {
    * The API call returns all personalised info points that the user has saved
    */
   async getInfoPoint() {
-    const response = await fetch('/get_personalised_points/' + this.state.username);
+    const response = await fetch(this.baseUrl+'/get_personalised_points/' + this.state.username);
     this.infoReceived = await response.json(); 
     if(this.infoReceived.length > 0) {
       var titles = this.infoReceived[0].split(","); // Splits string into array of info titles
@@ -161,7 +163,7 @@ class App extends Component {
   async postInfoPoint(title) {
 
     // Makes API call, sending username and title of info card to be saved
-    const response = await fetch('/post_personal_info', {
+    const response = await fetch(this.baseUrl+'/post_personal_info', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -242,7 +244,7 @@ class App extends Component {
    * API call passes title that needs to be deleted to the backend
    */
   async deletePersonalInfoApi(title) {
-    const response = await fetch('/remove_personalised_point', {
+    const response = await fetch(this.baseUrl+'/remove_personalised_point', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

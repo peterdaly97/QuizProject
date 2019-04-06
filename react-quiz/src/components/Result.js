@@ -26,6 +26,7 @@ import Option from '../components/Option';
         result: 0,
         highScore: 0
       }
+      this.baseUrl = "http://jira.itcarlow.ie/desqol/quiz";
     }
 
     /**
@@ -41,7 +42,7 @@ import Option from '../components/Option';
      */
     async callApi() {
       // Send current score and username
-      const scoreResponse = await fetch('/score', {
+      const scoreResponse = await fetch(this.baseUrl+'/score', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

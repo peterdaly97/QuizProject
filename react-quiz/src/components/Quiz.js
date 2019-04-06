@@ -56,6 +56,7 @@ class Quiz extends Component {
 
     this.quizReceived = []; // An array to store all possible questions
     this.questions = []; // An array to store the questions that will be on this quiz
+    this.baseUrl = "http://jira.itcarlow.ie/desqol/quiz";
   }
 
   /**
@@ -113,7 +114,7 @@ class Quiz extends Component {
    * The api call will post this challenge to the database, sending the username and score of the plaey
    */
   async sendChallenge() {
-    const response = await fetch('/post_challenge', {
+    const response = await fetch(this.baseUrl+'/post_challenge', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -135,7 +136,7 @@ class Quiz extends Component {
    * The api call will post the users score in the score and the return value will be whether or not they won
    */
   async respondToChallenge() {
-    const response = await fetch('/respond_to_challenge', {
+    const response = await fetch(this.baseUrl+'/respond_to_challenge', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
