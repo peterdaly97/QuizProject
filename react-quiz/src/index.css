@@ -64,13 +64,12 @@ h3 {
 }
 
 .confirm {
-  left: 50%;
+  left: 15%;
   width: 70%;
   height: 10%;
-  margin-top: 20%;
-  margin-left: -35%;
   background-color: #f44162;
   font-size: 32px;
+  z-index: 5;
 }
 
 /* Quiz Component */
